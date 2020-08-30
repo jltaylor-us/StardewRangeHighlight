@@ -6,7 +6,7 @@ A Stardew Valley SMAPI mod for adding range highlighting.
 
 This mod adds highlighting for the range of the following items and buildings:
 
-* Sprinklers (including Prismatic Sprinkler)
+* Sprinklers (including the Prismatic Sprinkler from the Prismatic Tools mod)
 * Scarecrows (including the Deluxe Scarecrow)
 * Bee Houses
 * Junimo Huts
@@ -24,8 +24,8 @@ See the [Screenshots](Screenshots/) directory for some examples.
 Works with Stardew Valley 1.4, single player and multiplayer.
 No known incompatibilities with other mods, although if another mod also
 shows range highlights (e.g., UI Info Suite) then each mod will show
-its own highlight, which is probably not what you want.  You probably
-want to disable the other mod's range highlighting (for example, by
+its own highlight.  The result is not horrible, but you probably
+want to disable the other mod's range highlighting if possible (for example, by
 using UI Info Suite's in-game menu to disable its range highlighting).
 
 ### Installation

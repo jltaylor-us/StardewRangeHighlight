@@ -119,6 +119,25 @@ namespace RangeHighlight {
                     }
                 });
 
+            if (config.showPlacedBombRange) {
+                // not sure about this API yet, so keeping it private for now
+                highlighter.AddTemporaryAnimatedSpriteHighlighter("jltaylor-us.RangeHighlight/bomb",
+                    sprite => {
+                        switch (sprite.initialParentTileIndex) {
+                            case 286:
+                                return new Tuple<Color, bool[,]>(config.BombRangeTint, defaultShapes.cherryBomb);
+                            case 287:
+                                return new Tuple<Color, bool[,]>(config.BombRangeTint, defaultShapes.bomb);
+                            case 288:
+                                return new Tuple<Color, bool[,]>(config.BombRangeTint, defaultShapes.megaBomb);
+                            default:
+                                return null;
+                        }
+
+                    });
+            }
+
         }
+
     }
 }

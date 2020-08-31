@@ -4,6 +4,8 @@ using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 namespace RangeHighlight {
     internal class ModConfig {
+        public bool showPlacedBombInnerRange { get; set; } = true;
+        public bool showPlacedBombOuterRange { get; set; } = true;
         public SButton ShowAllRangesKey { get; set; } = SButton.LeftShift;
         public SButton ShowSprinklerRangeKey { get; set; } = SButton.R;
         public SButton ShowScarecrowRangeKey { get; set; } = SButton.O;

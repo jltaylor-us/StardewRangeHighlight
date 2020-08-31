@@ -45,11 +45,30 @@ namespace RangeHighlight {
         // ----- Helpers for making highlight shapes -----
 
         /// <summary>
-        ///   Return a circle shape (i.e., the shape of a scarecrow's range)
+        ///   An deprecated alias for <c>GetCartesianCircleWithTruncate</c>.
         /// </summary>
         /// <param name="radius">The circle radius</param>
         /// <param name="excludeCenter">whether the center tile should be excluded</param>
+        [Obsolete("GetCartesianCircle is deprecated.  Use GetCartesianCircleWithTruncate instead.")]
         bool[,] GetCartesianCircle(uint radius, bool excludeCenter = true);
+
+        /// <summary>
+        ///   Return a circle shape (i.e., the shape of a scarecrow's range),
+        ///   where a tile's distance from the center is truncated to an integer
+        ///   before comparing against the radius
+        /// </summary>
+        /// <param name="radius">The circle radius</param>
+        /// <param name="excludeCenter">whether the center tile should be excluded</param>
+        bool[,] GetCartesianCircleWithTruncate(uint radius, bool excludeCenter = true);
+
+        /// <summary>
+        ///   Return a more accurate circle shape (i.e., the shape of a bomb's range),
+        ///   where a tile's distance from the center is rounded to the nearest integer
+        ///   before comparing against the radius
+        /// </summary>
+        /// <param name="radius">The circle radius</param>
+        /// <param name="excludeCenter">whether the center tile should be excluded</param>
+        bool[,] GetCartesianCircleWithRound(uint radius, bool excludeCenter = true);
 
         /// <summary>
         ///   Return a "circle" using Manhattan distance from the center (i.e., the shape of a beehouse's range)

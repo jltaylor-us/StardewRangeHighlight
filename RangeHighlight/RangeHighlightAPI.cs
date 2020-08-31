@@ -53,10 +53,27 @@ namespace RangeHighlight {
             return result;
         }
 
+        [Obsolete("GetCartesianCircle is deprecated.  Use GetCartesianCircleWithTruncate instead.")]
         public bool[,] GetCartesianCircle(uint radius, bool excludeCenter = true) {
+            return GetCartesianCircleWithTruncate(radius, excludeCenter);
+        }
+
+        public bool[,] GetCartesianCircleWithTruncate(uint radius, bool excludeCenter = true) {
             int r = (int)radius;
             return GetCircle(r, excludeCenter, (i, j) =>
                 (int)Math.Truncate(Math.Sqrt((r - i) * (r - i) + (r - j) * (r - j))));
+        }
+
+        public bool[,] GetCartesianCircleWithCeiling(uint radius, bool excludeCenter = true) {
+            int r = (int)radius;
+            return GetCircle(r, excludeCenter, (i, j) =>
+                (int)Math.Ceiling(Math.Sqrt((r - i) * (r - i) + (r - j) * (r - j))));
+        }
+
+        public bool[,] GetCartesianCircleWithRound(uint radius, bool excludeCenter = true) {
+            int r = (int)radius;
+            return GetCircle(r, excludeCenter, (i, j) =>
+                (int)Math.Round(Math.Sqrt((r - i) * (r - i) + (r - j) * (r - j))));
         }
 
         public bool[,] GetManhattanCircle(uint radius, bool excludeCenter = true) {

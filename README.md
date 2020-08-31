@@ -10,6 +10,7 @@ This mod adds highlighting for the range of the following items and buildings:
 * Scarecrows (including the Deluxe Scarecrow)
 * Bee Houses
 * Junimo Huts
+* Bombs (new in version 1.1.0)
 
 Ranges are shown automatically when the corresponding item is equipped,
 or when the cursor is over a building of the appropriate type.  Hold down one
@@ -48,6 +49,7 @@ highlight colors.  The default configuration is summarized in the table below.
 | Scarecro**w**s | `W` | green
 | Bee **H**ouses | `H` | yellow
 | **J**unimo Huts | `J` | white
+| Bombs | (none) | red
 
 ## For mod developers
 

@@ -14,5 +14,6 @@ namespace RangeHighlight {
         public Color SprinklerRangeTint { get; set; } = new Color(0.6f, 0.6f, 0.9f, 0.7f);
         public Color ScarecrowRangeTint { get; set; } = new Color(0.6f, 1.0f, 0.6f, 0.7f);
         public Color BeehouseRangeTint { get; set; } = new Color(1.0f, 1.0f, 0.6f, 0.7f);
+        public Color BombRangeTint { get; set; } = new Color(1.0f, 0.5f, 0.5f, 0.7f);
     }
 }

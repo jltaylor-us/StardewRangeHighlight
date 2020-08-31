@@ -13,6 +13,7 @@ using StardewValley.Locations;
 namespace RangeHighlight {
     using BuildingHighlightFunction = Func<Building, Tuple<Color, bool[,], int, int>>;
     using ItemHighlightFunction = Func<string, Tuple<Color, bool[,]>>;
+    using TASHighlightFunction = Func<TemporaryAnimatedSprite, Tuple<Color, bool[,]>>;
 
     internal class RangeHighlighter {
         private readonly IModHelper helper;
@@ -34,6 +35,7 @@ namespace RangeHighlight {
         }
         private readonly List<Highlighter<BuildingHighlightFunction>> buildingHighlighters = new List<Highlighter<BuildingHighlightFunction>>();
         private readonly List<Highlighter<ItemHighlightFunction>> itemHighlighters = new List<Highlighter<ItemHighlightFunction>>();
+        private readonly List<Highlighter<TASHighlightFunction>> tasHighlighters = new List<Highlighter<TASHighlightFunction>>();
 
         public RangeHighlighter(IModHelper helper, ModConfig config) {
             this.helper = helper;
@@ -100,6 +102,13 @@ namespace RangeHighlight {
             itemHighlighters.RemoveAll(elt => elt.uniqueId == uniqueId);
         }
 
+        public void AddTemporaryAnimatedSpriteHighlighter(string uniqueId, TASHighlightFunction highlighter) {
+            tasHighlighters.Insert(0, new Highlighter<TASHighlightFunction>(uniqueId, null, highlighter));
+        }
+
+        public void RemoveTemporaryAnimatedSpriteHighlighter(string uniqueId) {
+            tasHighlighters.RemoveAll(elt => elt.uniqueId == uniqueId);
+        }
 
         private void OnUpdateTicked(object sender, UpdateTickedEventArgs e) {
             if (!e.IsMultipleOf(6)) return; // only do this once every 0.1s or so
@@ -184,13 +193,26 @@ namespace RangeHighlight {
                         if (runItemHighlighter[i]) {
                             var ret = itemHighlighters[i].highlighter(itemName);
                             if (ret != null) {
-                                var cursorTile = helper.Input.GetCursorPosition().Tile;
                                 AddHighlightTiles(ret.Item1, ret.Item2, (int)item.TileLocation.X, (int)item.TileLocation.Y);
                                 break;
                             }
                         }
                     }
                 }
+            }
+
+            if (tasHighlighters.Count > 0) {
+                foreach (var sprite in Game1.currentLocation.temporarySprites) {
+                    foreach (var highlighter in tasHighlighters) {
+                        var ret = highlighter.highlighter(sprite);
+                        if (ret != null) {
+                            AddHighlightTiles(ret.Item1, ret.Item2,
+                                (int)(sprite.position.X / Game1.tileSize), (int)(sprite.position.Y / Game1.tileSize));
+                            break;
+                        }
+                    }
+                }
+
             }
         }
 

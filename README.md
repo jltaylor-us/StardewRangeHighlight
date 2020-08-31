@@ -44,9 +44,9 @@ highlight colors.  The default configuration is summarized in the table below.
 
 | | hotkey | highlight tint
 | --- | --- | ---
-| All **R**ange Highlights | `R` | as listed below
-| **S**prinklers | `S` | blue
-| Scarecro**w**s | `W` | green
+| All Range Highlights | `LeftShift` | as listed below
+| Sp**r**inklers | `R` | blue
+| Scarecr**o**ws | `O` | green
 | Bee **H**ouses | `H` | yellow
 | **J**unimo Huts | `J` | white
 | Bombs | (none) | red

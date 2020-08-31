@@ -4,9 +4,9 @@ using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 namespace RangeHighlight {
     internal class ModConfig {
-        public SButton ShowAllRangesKey { get; set; } = SButton.R;
-        public SButton ShowSprinklerRangeKey { get; set; } = SButton.S;
-        public SButton ShowScarecrowRangeKey { get; set; } = SButton.W;
+        public SButton ShowAllRangesKey { get; set; } = SButton.LeftShift;
+        public SButton ShowSprinklerRangeKey { get; set; } = SButton.R;
+        public SButton ShowScarecrowRangeKey { get; set; } = SButton.O;
         public SButton ShowBeehouseRangeKey { get; set; } = SButton.H;
         public SButton ShowJunimoRangeKey { get; set; } = SButton.J;
 

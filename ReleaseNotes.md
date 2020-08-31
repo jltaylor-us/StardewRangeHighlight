@@ -1,6 +1,13 @@
 
 # Release Notes
 
+## Version 1.1.1
+
+* Change the default key bindings so that they do not conflict
+  with the default movement keys.  (Keep in mind that if the
+  `config.json` has already been generated with the old defaults
+  then they won't be overwritten with the new defaults.)
+
 ## Version 1.1.0
 
 ### User-visible Changes

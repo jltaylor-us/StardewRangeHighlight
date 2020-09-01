@@ -41,9 +41,20 @@ namespace RangeHighlight {
             public readonly bool[,] scarecrow;
             public readonly bool[,] deluxeScarecrow;
             public readonly bool[,] junimoHut;
-            public readonly bool[,] cherryBomb;
-            public readonly bool[,] bomb;
-            public readonly bool[,] megaBomb;
+            public readonly struct BombRange {
+                public bool[,] range { get; }
+                public bool[,] rangeInner { get; }
+                public bool[,] rangeOuter { get; }
+
+                public BombRange(bool[,] range, bool[,] rangeInner, bool[,] rangeOuter) {
+                    this.range = range;
+                    this.rangeInner = rangeInner;
+                    this.rangeOuter = rangeOuter;
+                }
+            }
+            public readonly BombRange cherryBomb;
+            public readonly BombRange bomb;
+            public readonly BombRange megaBomb;
 
             public DefaultShapes(IRangeHighlightAPI api) {
                 qualitySprinkler = api.GetSquareCircle(1);
@@ -54,12 +65,26 @@ namespace RangeHighlight {
                 deluxeScarecrow = api.GetCartesianCircleWithTruncate(16);
                 junimoHut = api.GetSquareCircle(8);
                 junimoHut[7, 7] = junimoHut[8, 7] = junimoHut[9, 7] = junimoHut[7, 8] = junimoHut[9, 8] = false;
-                cherryBomb = api.GetCartesianCircleWithRound(3, false);
-                bomb = api.GetCartesianCircleWithRound(5, false);
-                megaBomb = api.GetCartesianCircleWithRound(7, false);
+                cherryBomb = new BombRange(
+                    api.GetCartesianCircleWithRound(3, false),
+                    new bool[,] {
+                        { false, true, false},
+                        { true, true, true },
+                        { false, true, false}
+                    },
+                    api.GetSquareCircle(3, false));
+                bomb = new BombRange(
+                    api.GetCartesianCircleWithRound(5, false),
+                    api.GetCartesianCircleWithRound(2, false),
+                    api.GetSquareCircle(5, false));
+                bool[,] mb = api.GetCartesianCircleWithRound(7, false);
                 // yeah, it's strange; but I have the screenshots showing this shape
-                megaBomb[1, 5] = megaBomb[1, 6] = megaBomb[1, 7] = megaBomb[1, 8] = megaBomb[1, 9] = false;
-                megaBomb[13, 5] = megaBomb[13, 6] = megaBomb[13, 7] = megaBomb[13, 8] = megaBomb[13, 9] = false;
+                mb[1, 5] = mb[1, 6] = mb[1, 7] = mb[1, 8] = mb[1, 9] = false;
+                mb[13, 5] = mb[13, 6] = mb[13, 7] = mb[13, 8] = mb[13, 9] = false;
+                megaBomb = new BombRange(
+                    mb,
+                    cherryBomb.range,
+                    api.GetSquareCircle(7, false));
             }
 
             public bool[,] GetSprinkler(string name) {
@@ -69,7 +94,7 @@ namespace RangeHighlight {
                 return sprinkler;
             }
 
-            public bool[,] GetBomb(string name) {
+            public BombRange GetBomb(string name) {
                 if (name.Contains("mega")) return megaBomb;
                 if (name.Contains("cherry")) return cherryBomb;
                 return bomb;
@@ -113,7 +138,11 @@ namespace RangeHighlight {
             api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/bomb", null,
                 itemName => {
                     if (itemName.Contains("bomb")) {
-                        return new Tuple<Color, bool[,]>(config.BombRangeTint, defaultShapes.GetBomb(itemName));
+                        DefaultShapes.BombRange range = defaultShapes.GetBomb(itemName);
+                        // This relies on the fact that placed bombs are not an item, so this
+                        // can use the cursor position for the location
+                        var cursorTile = helper.Input.GetCursorPosition().Tile;
+                        return bombHelper(range, (int)cursorTile.X, (int)cursorTile.Y);
                     } else {
                         return null;
                     }
@@ -123,20 +152,36 @@ namespace RangeHighlight {
                 // not sure about this API yet, so keeping it private for now
                 highlighter.AddTemporaryAnimatedSpriteHighlighter("jltaylor-us.RangeHighlight/bomb",
                     sprite => {
+                        DefaultShapes.BombRange range;
                         switch (sprite.initialParentTileIndex) {
                             case 286:
-                                return new Tuple<Color, bool[,]>(config.BombRangeTint, defaultShapes.cherryBomb);
+                                range = defaultShapes.cherryBomb;
+                                break;
                             case 287:
-                                return new Tuple<Color, bool[,]>(config.BombRangeTint, defaultShapes.bomb);
+                                range = defaultShapes.bomb;
+                                break;
                             case 288:
-                                return new Tuple<Color, bool[,]>(config.BombRangeTint, defaultShapes.megaBomb);
+                                range = defaultShapes.megaBomb;
+                                break;
                             default:
                                 return null;
                         }
-
+                        return bombHelper(range,
+                            (int)(sprite.position.X / Game1.tileSize), (int)(sprite.position.Y / Game1.tileSize));
                     });
             }
 
+        }
+
+        private Tuple<Color, bool[,]> bombHelper(DefaultShapes.BombRange range, int posX, int posY) {
+            if (config.showBombInnerRange) {
+                highlighter.AddHighlightTiles(config.BombInnerRangeTint, range.rangeInner, posX, posY);
+            }
+            if (config.showBombOuterRange) {
+                // yes, the effective area is actually offset from center
+                highlighter.AddHighlightTiles(config.BombOuterRangeTint, range.rangeOuter, posX - 1, posY - 1);
+            }
+            return new Tuple<Color, bool[,]>(config.BombRangeTint, range.range);
         }
 
     }

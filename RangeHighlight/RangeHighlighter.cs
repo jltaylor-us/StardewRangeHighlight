@@ -69,7 +69,7 @@ namespace RangeHighlight {
             }
         }
 
-        private void AddHighlightTiles(Color color, bool[,] shape, int xOrigin, int yOrigin) {
+        internal void AddHighlightTiles(Color color, bool[,] shape, int xOrigin, int yOrigin) {
             int xOffset = shape.GetLength(0) / 2;
             int yOffset = shape.GetLength(1) / 2;
             if (highlightTilesMutex.WaitOne(0)) {

@@ -1,12 +1,37 @@
 
 # Release Notes
 
+## Version 1.2.0
+
+* Bombs now show multiple areas of effect
+  * The innermost area is where the bomb can cause dirt to turn
+    into hoed ground.  The default configuration is to not show
+    this area.
+  * The "normal" range is the area where rocks and many items are
+    destroyed.  This is the range shown in previous versions.
+  * The outermost area is where crops are destroyed, flooring is
+    disrupted, and the player takes damage.  (Note that this area
+    is not centered on the bomb.)  The default configuration does
+    show this range, but it can be disabled.
+* Bombs that have been placed on the ground now show their ranges.
+  This can be disabled in configuration.
+
+_A note on the API:_
+
+Unlike all of the other highlights, the bomb highlighting does not
+use the public API.  Bombs are weird, and I didn't want to make
+a messy API to support them without some other use case for it.
+
+-----
+
 ## Version 1.1.1
 
 * Change the default key bindings so that they do not conflict
   with the default movement keys.  (Keep in mind that if the
   `config.json` has already been generated with the old defaults
   then they won't be overwritten with the new defaults.)
+
+-----
 
 ## Version 1.1.0
 

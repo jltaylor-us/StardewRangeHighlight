@@ -10,7 +10,7 @@ This mod adds highlighting for the range of the following items and buildings:
 * Scarecrows (including the Deluxe Scarecrow)
 * Bee Houses
 * Junimo Huts
-* Bombs (new in version 1.1.0)
+* Bombs (see note below)
 
 Ranges are shown automatically when the corresponding item is equipped,
 or when the cursor is over a building of the appropriate type.  Hold down one
@@ -19,6 +19,26 @@ position or what item is equipped.  Each range type has a different
 highlight color, which is also configurable (see [Configuration](#configuration) below).
 
 See the [Screenshots](Screenshots/) directory for some examples.
+
+#### A note on bombs
+
+Bombs are weird.  They don't have a single range of effect, they have
+three different ranges.
+
+  * The innermost area is where the bomb can cause dirt to turn
+    into hoed ground.  The default configuration is to not show
+    this area, but it can be enabled.
+  * The "normal" range is the area where rocks and many items are
+    destroyed.  This is was the only range shown version 1.1.
+  * The outermost area is where crops are destroyed, flooring is
+    disrupted, and the player takes damage.  (Note that this area
+    is not centered on the bomb.)  The default configuration does
+    show this range, but it can be disabled.
+
+Version 1.1 shows only the "normal" range, and only around the cursor
+location when a bomb is equipped.  Starting in version 1.2, multiple
+ranges are shown (if configured), and each bomb placed on the ground
+and not yet exploded shows its ranges (unless disabled in configuration).
 
 ### Compatibility
 
@@ -49,7 +69,10 @@ highlight colors.  The default configuration is summarized in the table below.
 | Scarecr**o**ws | `O` | green
 | Bee **H**ouses | `H` | yellow
 | **J**unimo Huts | `J` | white
-| Bombs | (none) | red
+| Bombs | (none) | red/orange
+
+You can also configure whether to show the inner and outer ranges of bombs,
+and whether to show the ranges of "ticking" bombs placed on the ground.
 
 ## For mod developers
 
@@ -65,3 +88,7 @@ For the full API, see [`IRangeHighlightAPI.cs`](https://github.com/jltaylor-us/S
 For general information on how to use another mod's API in your mod,
 see the [Mod Integration](https://stardewvalleywiki.com/Modding:Modder_Guide/APIs/Integrations)
 page on the Stardew Valley Wiki.
+
+_Disclaimer:_  Highlighting for bombs does not use the public API.  They're
+weird, and I didn't want to make a messy API to support them without some other
+use case for it.

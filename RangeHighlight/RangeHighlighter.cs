@@ -121,7 +121,7 @@ namespace RangeHighlight {
                 }
             }
 
-            if (Game1.activeClickableMenu != null || Game1.eventUp) return;
+            if (Game1.activeClickableMenu != null || Game1.eventUp || Game1.currentLocation == null) return;
 
             bool[] runBuildingHighlighter = new bool[buildingHighlighters.Count];
             bool[] runItemHighlighter = new bool[itemHighlighters.Count];

@@ -21,16 +21,29 @@ namespace RangeHighlight {
         private readonly List<Tuple<Color, Point>> highlightTiles = new List<Tuple<Color, Point>>();
         private readonly Mutex highlightTilesMutex = new Mutex();
         private readonly Texture2D tileTexture;
+        private bool showAllDownLastState = false;
+        private bool showAllToggleState = false;
 
-        private readonly struct Highlighter<T> {
+        private class Highlighter<T> {
             public string uniqueId { get; }
             public SButton? hotkey { get; }
             public T highlighter { get; }
+            public bool hotkeyDownLastState = false;
+            public bool hotkeyToggleState = false;
 
             public Highlighter(string uniqueId, SButton? hotkey, T highlighter) {
                 this.uniqueId = uniqueId;
                 this.hotkey = hotkey;
                 this.highlighter = highlighter;
+            }
+
+            public void UpdateHotkeyToggleState(IModHelper helper) {
+                if (this.hotkey is SButton hotkey) {
+                    bool isDown = helper.Input.IsDown(hotkey);
+                    if (isDown && !hotkeyDownLastState)
+                        hotkeyToggleState = !hotkeyToggleState;
+                    hotkeyDownLastState = isDown;
+                }
             }
         }
         private readonly List<Highlighter<BuildingHighlightFunction>> buildingHighlighters = new List<Highlighter<BuildingHighlightFunction>>();
@@ -158,17 +171,38 @@ namespace RangeHighlight {
                 }
             }
 
-            bool showAll = helper.Input.IsDown(config.ShowAllRangesKey);
-            for (int i = 0; i < buildingHighlighters.Count; ++i) {
-                if (showAll || buildingHighlighters[i].hotkey is SButton hotkey && helper.Input.IsDown(hotkey)) {
-                    runBuildingHighlighter[i] = true;
-                    iterateBuildings = true;
+            if (config.hotkeysToggle) {
+                bool showAllDown = helper.Input.IsDown(config.ShowAllRangesKey);
+                if (showAllDown && !showAllDownLastState)
+                    showAllToggleState = !showAllToggleState;
+                showAllDownLastState = showAllDown;
+                for (int i = 0; i < buildingHighlighters.Count; ++i) {
+                    buildingHighlighters[i].UpdateHotkeyToggleState(helper);
+                    if (showAllToggleState || buildingHighlighters[i].hotkeyToggleState) {
+                        runBuildingHighlighter[i] = true;
+                        iterateBuildings = true;
+                    }
                 }
-            }
-            for (int i = 0; i < itemHighlighters.Count; ++i) {
-                if (showAll || itemHighlighters[i].hotkey is SButton hotkey && helper.Input.IsDown(hotkey)) {
-                    runItemHighlighter[i] = true;
-                    iterateItems = true;
+                for (int i = 0; i < itemHighlighters.Count; ++i) {
+                    itemHighlighters[i].UpdateHotkeyToggleState(helper);
+                    if (showAllToggleState || itemHighlighters[i].hotkeyToggleState) {
+                        runItemHighlighter[i] = true;
+                        iterateItems = true;
+                    }
+                }
+            } else {
+                bool showAll = helper.Input.IsDown(config.ShowAllRangesKey);
+                for (int i = 0; i < buildingHighlighters.Count; ++i) {
+                    if (showAll || buildingHighlighters[i].hotkey is SButton hotkey && helper.Input.IsDown(hotkey)) {
+                        runBuildingHighlighter[i] = true;
+                        iterateBuildings = true;
+                    }
+                }
+                for (int i = 0; i < itemHighlighters.Count; ++i) {
+                    if (showAll || itemHighlighters[i].hotkey is SButton hotkey && helper.Input.IsDown(hotkey)) {
+                        runItemHighlighter[i] = true;
+                        iterateItems = true;
+                    }
                 }
             }
 

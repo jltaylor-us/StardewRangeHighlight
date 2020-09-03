@@ -12,6 +12,7 @@ namespace RangeHighlight {
         public SButton ShowScarecrowRangeKey { get; set; } = SButton.O;
         public SButton ShowBeehouseRangeKey { get; set; } = SButton.H;
         public SButton ShowJunimoRangeKey { get; set; } = SButton.J;
+        public bool hotkeysToggle { get; set; } = false;
 
         public Color JunimoRangeTint { get; set; } = Color.White * 0.7f;
         public Color SprinklerRangeTint { get; set; } = new Color(0.6f, 0.6f, 0.9f, 0.7f);

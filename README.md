@@ -71,6 +71,9 @@ highlight colors.  The default configuration is summarized in the table below.
 | **J**unimo Huts | `J` | white
 | Bombs | (none) | red/orange
 
+If the `hotkeysToggle` configuration property is set to `true` then the hotkeys will
+behave as a toggle switch rather than needing to be held down.
+
 You can also configure whether to show the inner and outer ranges of bombs,
 and whether to show the ranges of "ticking" bombs placed on the ground.
 

@@ -1,6 +1,15 @@
 
 # Release Notes
 
+## Version 1.3.0
+
+* Add the `hotkeysToggle` configuration property (off by default).
+  If this property is changed to `true` then the hotkeys will act
+  as a toggle switch rather than needing to be held down.
+* Fix a NullReferenceException that was sometimes
+  being printed to the console when moving between locations
+  (only observed as a farm hand in multiplayer).
+
 ## Version 1.2.0
 
 * Bombs now show multiple areas of effect

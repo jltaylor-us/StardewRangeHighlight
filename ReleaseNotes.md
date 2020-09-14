@@ -1,6 +1,17 @@
 
 # Release Notes
 
+## Version 1.4.0
+
+### User-visible Changes
+
+* Add Show*THING*Range configuration options to allow disabling
+  highlighting of *THING* completely.
+
+### API Changes
+
+-----
+
 ## Version 1.3.0
 
 * Add the `hotkeysToggle` configuration property (off by default).
@@ -9,6 +20,8 @@
 * Fix a NullReferenceException that was sometimes
   being printed to the console when moving between locations
   (only observed as a farm hand in multiplayer).
+
+-----
 
 ## Version 1.2.0
 

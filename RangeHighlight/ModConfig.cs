@@ -4,6 +4,12 @@ using StardewModdingAPI;
 using Microsoft.Xna.Framework;
 namespace RangeHighlight {
     internal class ModConfig {
+        public bool ShowJunimoRange { get; set; } = true;
+        public bool ShowSprinklerRange { get; set; } = true;
+        public bool ShowScarecrowRange { get; set; } = true;
+        public bool ShowBeehouseRange { get; set; } = true;
+        public bool ShowBombRange { get; set; } = true;
+
         public bool showPlacedBombRange { get; set; } = true;
         public bool showBombInnerRange { get; set; } = false;
         public bool showBombOuterRange { get; set; } = true;

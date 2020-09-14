@@ -102,75 +102,84 @@ namespace RangeHighlight {
         }
 
         private void installDefaultHighlights() {
-            api.AddBuildingRangeHighlighter("jltaylor-us.RangeHighlight/junimoHut", config.ShowJunimoRangeKey,
-                building => {
-                    if (building is JunimoHut) {
-                        return new Tuple<Color, bool[,], int, int>(config.JunimoRangeTint, defaultShapes.junimoHut, 1, 1);
-                    } else {
-                        return null;
-                    }
-                });
-            api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/scarecrow", config.ShowScarecrowRangeKey,
-                itemName => {
-                    if (itemName.Contains("arecrow")) {
-                        return new Tuple<Color, bool[,]>(config.ScarecrowRangeTint,
-                            itemName.Contains("deluxe") ? defaultShapes.deluxeScarecrow : defaultShapes.scarecrow);
-                    } else {
-                        return null;
-                    }
-                });
-            api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler", config.ShowSprinklerRangeKey,
-                itemName => {
-                    if (itemName.Contains("sprinkler")) {
-                        return new Tuple<Color, bool[,]>(config.SprinklerRangeTint, defaultShapes.GetSprinkler(itemName));
-                    } else {
-                        return null;
-                    }
-                });
-            api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/beehouse", config.ShowBeehouseRangeKey,
-                itemName => {
-                    if (itemName.Contains("bee house")) {
-                        return new Tuple<Color, bool[,]>(config.BeehouseRangeTint, defaultShapes.beehouse);
-                    } else {
-                        return null;
-                    }
-                });
-            api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/bomb", null,
-                itemName => {
-                    if (itemName.Contains("bomb")) {
-                        DefaultShapes.BombRange range = defaultShapes.GetBomb(itemName);
+            if (config.ShowJunimoRange) {
+                api.AddBuildingRangeHighlighter("jltaylor-us.RangeHighlight/junimoHut", config.ShowJunimoRangeKey,
+                    building => {
+                        if (building is JunimoHut) {
+                            return new Tuple<Color, bool[,], int, int>(config.JunimoRangeTint, defaultShapes.junimoHut, 1, 1);
+                        } else {
+                            return null;
+                        }
+                    });
+            }
+            if (config.ShowScarecrowRange) {
+                api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/scarecrow", config.ShowScarecrowRangeKey,
+                    itemName => {
+                        if (itemName.Contains("arecrow")) {
+                            return new Tuple<Color, bool[,]>(config.ScarecrowRangeTint,
+                                itemName.Contains("deluxe") ? defaultShapes.deluxeScarecrow : defaultShapes.scarecrow);
+                        } else {
+                            return null;
+                        }
+                    });
+            }
+            if (config.ShowSprinklerRange) {
+                api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler", config.ShowSprinklerRangeKey,
+                    itemName => {
+                        if (itemName.Contains("sprinkler")) {
+                            return new Tuple<Color, bool[,]>(config.SprinklerRangeTint, defaultShapes.GetSprinkler(itemName));
+                        } else {
+                            return null;
+                        }
+                    });
+            }
+            if (config.ShowBeehouseRange) {
+                api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/beehouse", config.ShowBeehouseRangeKey,
+                    itemName => {
+                        if (itemName.Contains("bee house")) {
+                            return new Tuple<Color, bool[,]>(config.BeehouseRangeTint, defaultShapes.beehouse);
+                        } else {
+                            return null;
+                        }
+                    });
+            }
+            if (config.ShowBombRange) {
+                api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/bomb", null,
+                    itemName => {
+                        if (itemName.Contains("bomb")) {
+                            DefaultShapes.BombRange range = defaultShapes.GetBomb(itemName);
                         // This relies on the fact that placed bombs are not an item, so this
                         // can use the cursor position for the location
                         var cursorTile = helper.Input.GetCursorPosition().Tile;
-                        return bombHelper(range, (int)cursorTile.X, (int)cursorTile.Y);
-                    } else {
-                        return null;
-                    }
-                });
-
-            if (config.showPlacedBombRange) {
-                // not sure about this API yet, so keeping it private for now
-                highlighter.AddTemporaryAnimatedSpriteHighlighter("jltaylor-us.RangeHighlight/bomb",
-                    sprite => {
-                        DefaultShapes.BombRange range;
-                        switch (sprite.initialParentTileIndex) {
-                            case 286:
-                                range = defaultShapes.cherryBomb;
-                                break;
-                            case 287:
-                                range = defaultShapes.bomb;
-                                break;
-                            case 288:
-                                range = defaultShapes.megaBomb;
-                                break;
-                            default:
-                                return null;
+                            return bombHelper(range, (int)cursorTile.X, (int)cursorTile.Y);
+                        } else {
+                            return null;
                         }
-                        return bombHelper(range,
-                            (int)(sprite.position.X / Game1.tileSize), (int)(sprite.position.Y / Game1.tileSize));
                     });
-            }
 
+                if (config.showPlacedBombRange) {
+                    // not sure about this API yet, so keeping it private for now
+                    highlighter.AddTemporaryAnimatedSpriteHighlighter("jltaylor-us.RangeHighlight/bomb",
+                        sprite => {
+                            DefaultShapes.BombRange range;
+                            switch (sprite.initialParentTileIndex) {
+                                case 286:
+                                    range = defaultShapes.cherryBomb;
+                                    break;
+                                case 287:
+                                    range = defaultShapes.bomb;
+                                    break;
+                                case 288:
+                                    range = defaultShapes.megaBomb;
+                                    break;
+                                default:
+                                    return null;
+                            }
+                            return bombHelper(range,
+                                (int)(sprite.position.X / Game1.tileSize), (int)(sprite.position.Y / Game1.tileSize));
+                        });
+                }
+            }
         }
 
         private Tuple<Color, bool[,]> bombHelper(DefaultShapes.BombRange range, int posX, int posY) {

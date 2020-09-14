@@ -77,6 +77,11 @@ behave as a toggle switch rather than needing to be held down.
 You can also configure whether to show the inner and outer ranges of bombs,
 and whether to show the ranges of "ticking" bombs placed on the ground.
 
+Finally, the Show*THING*Range options allow you to turn off highlighting of *thing*
+completely.  (Maybe you don't want to see it.  Maybe some other mod is already
+provides highlighting.  In any case, it's not going to hurt my feelings if you
+want to disable some features.)
+
 ## For mod developers
 
 This mod provides an API for adding highlighting to items and buildings.

@@ -37,6 +37,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
+using StardewValley;
 using StardewValley.Buildings;
 
 namespace RangeHighlight {
@@ -129,7 +130,24 @@ namespace RangeHighlight {
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>bool[,]</c> will result in no highlighting, but counts
         ///   as a match so that no other highlighters will be processed for the item</param>
+        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the other instead.")]
         void AddItemRangeHighlighter(string uniqueId, SButton? hotkey, Func<string, Tuple<Color, bool[,]>> highlighter);
+        /// <summary>Add a highlighter for items.</summary>
+        /// <param name="uniqueId">
+        ///   An ID by which the highlighter can be removed later.
+        ///   Best practice is for it to contain your mod's unique ID.
+        /// </param>
+        /// <param name="hotkey">Also apply the highlighter when this key is held</param>
+        /// <param name="highlighter">
+        ///   A function that evaluates whether the given item matches
+        ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
+        ///   color and highlight shape.  The function parameters are the <c>Item</c>
+        ///   object, its item ID ("parent sheet index"), and the lower-cased item name.
+        ///   If the item does not match then
+        ///   the function should return <c>null</c>.  (Note that returning an
+        ///   empty <c>bool[,]</c> will result in no highlighting, but counts
+        ///   as a match so that no other highlighters will be processed for the item</param>
+        void AddItemRangeHighlighter(string uniqueId, SButton? hotkey, Func<Item, int, string, Tuple<Color, bool[,]>> highlighter);
         /// <summary>
         ///   Remove any item range highlighters added with the given <c>uniqueId</c>
         /// </summary>

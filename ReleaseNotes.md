@@ -10,6 +10,11 @@
 
 ### API Changes
 
+* Change the function argument to `AddItemRangeHighlighter` to
+  take the `Item` object and its ID as arguments in addition to
+  the lower-cased item name.  (And by change I mean added a new
+  signature and deprecated the old one.)
+
 -----
 
 ## Version 1.3.0

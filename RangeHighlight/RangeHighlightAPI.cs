@@ -2,6 +2,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
+using StardewValley;
 using StardewValley.Buildings;
 
 namespace RangeHighlight {
@@ -94,7 +95,12 @@ namespace RangeHighlight {
             rangeHighlighter.AddBuildingHighlighter(uniqueId, hotkey, highlighter);
         }
 
+        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the other instead.")]
         void IRangeHighlightAPI.AddItemRangeHighlighter(string uniqueId, SButton? hotkey, Func<string, Tuple<Color, bool[,]>> highlighter) {
+            rangeHighlighter.AddItemHighlighter(uniqueId, hotkey, (Item item, int itemID, string lowerName) => { return highlighter(lowerName); });
+        }
+
+        void IRangeHighlightAPI.AddItemRangeHighlighter(string uniqueId, SButton? hotkey, Func<Item, int, string, Tuple<Color, bool[,]>> highlighter) {
             rangeHighlighter.AddItemHighlighter(uniqueId, hotkey, highlighter);
         }
 

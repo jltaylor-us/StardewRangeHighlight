@@ -12,7 +12,7 @@ using StardewValley.Locations;
 
 namespace RangeHighlight {
     using BuildingHighlightFunction = Func<Building, Tuple<Color, bool[,], int, int>>;
-    using ItemHighlightFunction = Func<string, Tuple<Color, bool[,]>>;
+    using ItemHighlightFunction = Func<Item, int, string, Tuple<Color, bool[,]>>;
     using TASHighlightFunction = Func<TemporaryAnimatedSprite, Tuple<Color, bool[,]>>;
 
     internal class RangeHighlighter {
@@ -158,9 +158,11 @@ namespace RangeHighlight {
             }
 
             if (Game1.player.CurrentItem != null) {
-                string itemName = Game1.player.CurrentItem.Name.ToLower();
+                Item item = Game1.player.CurrentItem;
+                string itemName = item.Name.ToLower();
+                int itemID = item.parentSheetIndex;
                 for (int i=0; i<itemHighlighters.Count; ++i) {
-                    var ret = itemHighlighters[i].highlighter(itemName);
+                    var ret = itemHighlighters[i].highlighter(item, itemID, itemName);
                     if (ret != null) {
                         var cursorTile = helper.Input.GetCursorPosition().Tile;
                         AddHighlightTiles(ret.Item1, ret.Item2, (int)cursorTile.X, (int)cursorTile.Y);
@@ -223,9 +225,10 @@ namespace RangeHighlight {
             if (iterateItems) {
                 foreach (var item in Game1.currentLocation.Objects.Values) {
                     string itemName = item.Name.ToLower();
+                    int itemID = item.parentSheetIndex;
                     for (int i = 0; i < itemHighlighters.Count; ++i) {
                         if (runItemHighlighter[i]) {
-                            var ret = itemHighlighters[i].highlighter(itemName);
+                            var ret = itemHighlighters[i].highlighter(item, itemID, itemName);
                             if (ret != null) {
                                 AddHighlightTiles(ret.Item1, ret.Item2, (int)item.TileLocation.X, (int)item.TileLocation.Y);
                                 break;

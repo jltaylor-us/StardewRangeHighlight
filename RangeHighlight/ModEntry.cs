@@ -114,7 +114,7 @@ namespace RangeHighlight {
             }
             if (config.ShowScarecrowRange) {
                 api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/scarecrow", config.ShowScarecrowRangeKey,
-                    itemName => {
+                    (item, itemID, itemName) => {
                         if (itemName.Contains("arecrow")) {
                             return new Tuple<Color, bool[,]>(config.ScarecrowRangeTint,
                                 itemName.Contains("deluxe") ? defaultShapes.deluxeScarecrow : defaultShapes.scarecrow);
@@ -125,7 +125,7 @@ namespace RangeHighlight {
             }
             if (config.ShowSprinklerRange) {
                 api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler", config.ShowSprinklerRangeKey,
-                    itemName => {
+                    (item, itemID, itemName) => {
                         if (itemName.Contains("sprinkler")) {
                             return new Tuple<Color, bool[,]>(config.SprinklerRangeTint, defaultShapes.GetSprinkler(itemName));
                         } else {
@@ -135,7 +135,7 @@ namespace RangeHighlight {
             }
             if (config.ShowBeehouseRange) {
                 api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/beehouse", config.ShowBeehouseRangeKey,
-                    itemName => {
+                    (item, itemID, itemName) => {
                         if (itemName.Contains("bee house")) {
                             return new Tuple<Color, bool[,]>(config.BeehouseRangeTint, defaultShapes.beehouse);
                         } else {
@@ -145,12 +145,12 @@ namespace RangeHighlight {
             }
             if (config.ShowBombRange) {
                 api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/bomb", null,
-                    itemName => {
+                    (item, itemID, itemName) => {
                         if (itemName.Contains("bomb")) {
                             DefaultShapes.BombRange range = defaultShapes.GetBomb(itemName);
-                        // This relies on the fact that placed bombs are not an item, so this
-                        // can use the cursor position for the location
-                        var cursorTile = helper.Input.GetCursorPosition().Tile;
+                            // This relies on the fact that placed bombs are not an item, so this
+                            // can use the cursor position for the location
+                            var cursorTile = helper.Input.GetCursorPosition().Tile;
                             return bombHelper(range, (int)cursorTile.X, (int)cursorTile.Y);
                         } else {
                             return null;

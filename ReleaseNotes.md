@@ -12,6 +12,7 @@
   Prismatic Tools.
 * Integration with the Better Junimos mod (if installed) to use
   its configured Junimo Hut range.
+* Highlights now work during building placement.
 
 ### API Changes
 
@@ -19,6 +20,8 @@
   take the `Item` object and its ID as arguments in addition to
   the lower-cased item name.  (And by change I mean added a new
   signature and deprecated the old one.)
+* Add a signature of `AddBuildingRangeHighlighter` that allows
+  matching on a `BluePrint` during building placement.
 
 -----
 

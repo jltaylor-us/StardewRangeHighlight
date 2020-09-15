@@ -9,8 +9,10 @@ using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Buildings;
 using StardewValley.Locations;
+using StardewValley.Menus;
 
 namespace RangeHighlight {
+    using BlueprintHighlightFunction = Func<BluePrint, Tuple<Color, bool[,], int, int>>;
     using BuildingHighlightFunction = Func<Building, Tuple<Color, bool[,], int, int>>;
     using ItemHighlightFunction = Func<Item, int, string, Tuple<Color, bool[,]>>;
     using TASHighlightFunction = Func<TemporaryAnimatedSprite, Tuple<Color, bool[,]>>;
@@ -46,6 +48,8 @@ namespace RangeHighlight {
                 }
             }
         }
+        // NB: blueprintHighlighters and buildingHighlighters are parallel lists.  The highlighter in a blueprintHighlighter may be null.
+        private readonly List<Highlighter<BlueprintHighlightFunction>> blueprintHighlighters = new List<Highlighter<BlueprintHighlightFunction>>();
         private readonly List<Highlighter<BuildingHighlightFunction>> buildingHighlighters = new List<Highlighter<BuildingHighlightFunction>>();
         private readonly List<Highlighter<ItemHighlightFunction>> itemHighlighters = new List<Highlighter<ItemHighlightFunction>>();
         private readonly List<Highlighter<TASHighlightFunction>> tasHighlighters = new List<Highlighter<TASHighlightFunction>>();
@@ -99,11 +103,14 @@ namespace RangeHighlight {
             }
         }
 
-        public void AddBuildingHighlighter(string uniqueId, SButton? hotkey, BuildingHighlightFunction highlighter) {
-            buildingHighlighters.Insert(0, new Highlighter<BuildingHighlightFunction>(uniqueId, hotkey, highlighter));
+        public void AddBuildingHighlighter(string uniqueId, SButton? hotkey,
+                BlueprintHighlightFunction blueprintHighlighter, BuildingHighlightFunction buildingHighlighter) {
+            blueprintHighlighters.Insert(0, new Highlighter<BlueprintHighlightFunction>(uniqueId, hotkey, blueprintHighlighter));
+            buildingHighlighters.Insert(0, new Highlighter<BuildingHighlightFunction>(uniqueId, hotkey, buildingHighlighter));
         }
 
         public void RemoveBuildingHighlighter(string uniqueId) {
+            blueprintHighlighters.RemoveAll(elt => elt.uniqueId == uniqueId);
             buildingHighlighters.RemoveAll(elt => elt.uniqueId == uniqueId);
         }
 
@@ -134,12 +141,30 @@ namespace RangeHighlight {
                 }
             }
 
-            if (Game1.activeClickableMenu != null || Game1.eventUp || Game1.currentLocation == null) return;
-
+            if (Game1.eventUp || Game1.currentLocation == null) return;
             bool[] runBuildingHighlighter = new bool[buildingHighlighters.Count];
             bool[] runItemHighlighter = new bool[itemHighlighters.Count];
             bool iterateBuildings = false;
             bool iterateItems = false;
+
+            if (Game1.activeClickableMenu != null) {
+                if (Game1.activeClickableMenu is CarpenterMenu carpenterMenu && Game1.currentLocation is BuildableGameLocation) {
+                    for (int i = 0; i < blueprintHighlighters.Count; ++i) {
+                        if (blueprintHighlighters[i].highlighter != null) {
+                            var ret = blueprintHighlighters[i].highlighter(carpenterMenu.CurrentBlueprint);
+                            if (ret != null) {
+                                var cursorTile = helper.Input.GetCursorPosition().Tile;
+                                AddHighlightTiles(ret.Item1, ret.Item2, (int)cursorTile.X + ret.Item3, (int)cursorTile.Y + ret.Item4);
+                                runBuildingHighlighter[i] = true;
+                                iterateBuildings = true;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    return;
+                }
+            }
 
             if (Game1.currentLocation is BuildableGameLocation buildableLocation) {
                 // check to see if the cursor is over a building
@@ -161,7 +186,7 @@ namespace RangeHighlight {
                 Item item = Game1.player.CurrentItem;
                 string itemName = item.Name.ToLower();
                 int itemID = item.parentSheetIndex;
-                for (int i=0; i<itemHighlighters.Count; ++i) {
+                for (int i = 0; i < itemHighlighters.Count; ++i) {
                     var ret = itemHighlighters[i].highlighter(item, itemID, itemName);
                     if (ret != null) {
                         var cursorTile = helper.Input.GetCursorPosition().Tile;

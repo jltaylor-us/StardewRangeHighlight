@@ -92,7 +92,13 @@ namespace RangeHighlight {
         // ----- Hooks for applying highlights ----
 
         void IRangeHighlightAPI.AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey, Func<Building, Tuple<Color, bool[,], int, int>> highlighter) {
-            rangeHighlighter.AddBuildingHighlighter(uniqueId, hotkey, highlighter);
+            rangeHighlighter.AddBuildingHighlighter(uniqueId, hotkey, null, highlighter);
+        }
+
+        void IRangeHighlightAPI.AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey,
+                Func<BluePrint, Tuple<Color, bool[,], int, int>> blueprintHighlighter,
+                Func<Building, Tuple<Color, bool[,], int, int>> buildingHighlighter) {
+            rangeHighlighter.AddBuildingHighlighter(uniqueId, hotkey, blueprintHighlighter, buildingHighlighter);
         }
 
         [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the other instead.")]

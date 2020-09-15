@@ -106,13 +106,39 @@ namespace RangeHighlight {
         /// <param name="hotkey">Also apply the highlighter when this key is held</param>
         /// <param name="highlighter">
         ///   A function that evaluates whether the <c>Building</c> matches
-        ///   this highlighter, and if so returns <c>Tuple</c> containing the tint
+        ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
         ///   color, highlight shape, and x and y offset for the building "center".
         ///   If the building does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>bool[,]</c> will result in no highlighting, but counts
         ///   as a match so that no other highlighters will be processed for the building</param>
         void AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey, Func<Building,Tuple<Color,bool[,],int,int>> highlighter);
+        /// <summary>Add a highlighter for buildings that also allows for highlighting during placement.</summary>
+        /// <param name="uniqueId">
+        ///   An ID by which the highlighter can be removed later.
+        ///   Best practice is for it to contain your mod's unique ID.
+        /// </param>
+        /// <param name="hotkey">Also apply the highlighter when this key is held</param>
+        /// <param name="blueprintHighlighter">
+        ///   A function that evaluates whether the <c>BluePrint</c> (for a building
+        ///   currently being placed) matches
+        ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
+        ///   color, highlight shape, and x and y offset for the building "center".
+        ///   If the building does not match then
+        ///   the function should return <c>null</c>.  (Note that returning an
+        ///   empty <c>bool[,]</c> will result in no highlighting, but counts
+        ///   as a match so that no other highlighters will be processed for the blueprint</param>
+        /// <param name="buildingHighlighter">
+        ///   A function that evaluates whether the <c>Building</c> matches
+        ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
+        ///   color, highlight shape, and x and y offset for the building "center".
+        ///   If the building does not match then
+        ///   the function should return <c>null</c>.  (Note that returning an
+        ///   empty <c>bool[,]</c> will result in no highlighting, but counts
+        ///   as a match so that no other highlighters will be processed for the building</param>
+        void AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey,
+                Func<BluePrint, Tuple<Color, bool[,], int, int>> blueprintHighlighter,
+                Func<Building, Tuple<Color, bool[,], int, int>> buildingHighlighter);
         /// <summary>
         ///   Remove any building range highlighters added with the given <c>uniqueId</c>
         /// </summary>
@@ -125,7 +151,7 @@ namespace RangeHighlight {
         /// <param name="hotkey">Also apply the highlighter when this key is held</param>
         /// <param name="highlighter">
         ///   A function that evaluates whether the lower-cased item name matches
-        ///   this highlighter, and if so returns <c>Tuple</c> containing the tint
+        ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
         ///   color and highlight shape.  If the item name does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>bool[,]</c> will result in no highlighting, but counts

@@ -118,6 +118,13 @@ namespace RangeHighlight {
         private void installDefaultHighlights() {
             if (config.ShowJunimoRange) {
                 api.AddBuildingRangeHighlighter("jltaylor-us.RangeHighlight/junimoHut", config.ShowJunimoRangeKey,
+                    blueprint => {
+                        if (blueprint.name == "Junimo Hut") {
+                            return new Tuple<Color, bool[,], int, int>(config.JunimoRangeTint, defaultShapes.junimoHut, 1, 1);
+                        } else {
+                            return null;
+                        }
+                    },
                     building => {
                         if (building is JunimoHut) {
                             return new Tuple<Color, bool[,], int, int>(config.JunimoRangeTint, defaultShapes.junimoHut, 1, 1);

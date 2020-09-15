@@ -15,6 +15,7 @@ namespace RangeHighlight {
         private RangeHighlightAPI _api_private; // for testing non-public stuff
         private DefaultShapes defaultShapes;
         private IModHelper helper;
+        private Integrations integrations;
 
         public override void Entry(IModHelper helper) {
             this.helper = helper;
@@ -23,20 +24,26 @@ namespace RangeHighlight {
             api = _api_private = new RangeHighlightAPI(this);
             defaultShapes = new DefaultShapes(api);
             installDefaultHighlights();
+            helper.Events.GameLoop.GameLaunched += onLaunched;
         }
 
         public override object GetApi() {
             return api;
         }
 
-        private class DefaultShapes {
+        private void onLaunched(object sender, GameLaunchedEventArgs e) {
+            integrations = new Integrations(helper, api, config, defaultShapes);
+        }
+
+
+        internal class DefaultShapes {
             public readonly bool[,] sprinkler = {
                 { false, true, false},
                 { true, false, true },
                 { false, true, false}};
             public readonly bool[,] qualitySprinkler;
             public readonly bool[,] iridiumSprinkler;
-            public readonly bool[,] prismaticSprinkler;
+            public bool[,] prismaticSprinkler;
             public readonly bool[,] beehouse;
             public readonly bool[,] scarecrow;
             public readonly bool[,] deluxeScarecrow;

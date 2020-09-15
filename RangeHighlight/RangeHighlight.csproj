@@ -36,6 +36,7 @@
     <Compile Include="IRangeHighlightAPI.cs" />
     <Compile Include="RangeHighlightAPI.cs" />
     <Compile Include="RangeHighlighter.cs" />
+    <Compile Include="Integrations.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">

@@ -11,10 +11,10 @@ namespace RangeHighlight {
     public class ModEntry : Mod {
         internal ModConfig config;
         internal RangeHighlighter highlighter;
-        private IRangeHighlightAPI api;
+        internal IRangeHighlightAPI api;
         private RangeHighlightAPI _api_private; // for testing non-public stuff
-        private DefaultShapes defaultShapes;
-        private IModHelper helper;
+        internal DefaultShapes defaultShapes;
+        internal IModHelper helper;
         private Integrations integrations;
 
         public override void Entry(IModHelper helper) {
@@ -32,11 +32,12 @@ namespace RangeHighlight {
         }
 
         private void onLaunched(object sender, GameLaunchedEventArgs e) {
-            integrations = new Integrations(helper, api, config, defaultShapes);
+            integrations = new Integrations(this);
         }
 
 
         internal class DefaultShapes {
+            private readonly IRangeHighlightAPI api;
             public readonly bool[,] sprinkler = {
                 { false, true, false},
                 { true, false, true },
@@ -47,7 +48,7 @@ namespace RangeHighlight {
             public readonly bool[,] beehouse;
             public readonly bool[,] scarecrow;
             public readonly bool[,] deluxeScarecrow;
-            public readonly bool[,] junimoHut;
+            public bool[,] junimoHut;
             public readonly struct BombRange {
                 public bool[,] range { get; }
                 public bool[,] rangeInner { get; }
@@ -64,14 +65,14 @@ namespace RangeHighlight {
             public readonly BombRange megaBomb;
 
             public DefaultShapes(IRangeHighlightAPI api) {
+                this.api = api;
                 qualitySprinkler = api.GetSquareCircle(1);
                 iridiumSprinkler = api.GetSquareCircle(2);
                 prismaticSprinkler = api.GetSquareCircle(3);
                 beehouse = api.GetManhattanCircle(5);
                 scarecrow = api.GetCartesianCircleWithTruncate(8);
                 deluxeScarecrow = api.GetCartesianCircleWithTruncate(16);
-                junimoHut = api.GetSquareCircle(8);
-                junimoHut[7, 7] = junimoHut[8, 7] = junimoHut[9, 7] = junimoHut[7, 8] = junimoHut[9, 8] = false;
+                SetJunimoRange(8);
                 cherryBomb = new BombRange(
                     api.GetCartesianCircleWithRound(3, false),
                     new bool[,] {
@@ -92,6 +93,12 @@ namespace RangeHighlight {
                     mb,
                     cherryBomb.range,
                     api.GetSquareCircle(7, false));
+            }
+
+            public void SetJunimoRange(uint r) {
+                junimoHut = api.GetSquareCircle(r);
+                junimoHut[r - 1, r - 1] = junimoHut[r, r - 1] = junimoHut[r + 1, r - 1] = false;
+                junimoHut[r - 1, r] = junimoHut[r + 1, r] = false;
             }
 
             public bool[,] GetSprinkler(string name) {

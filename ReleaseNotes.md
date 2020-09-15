@@ -10,6 +10,8 @@
 * Integration with the Prismatic Tools mod so that the range of
   the prismatic sprinkler matches the configured value in
   Prismatic Tools.
+* Integration with the Better Junimos mod (if installed) to use
+  its configured Junimo Hut range.
 
 ### API Changes
 

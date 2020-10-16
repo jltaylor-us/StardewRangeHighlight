@@ -2,6 +2,9 @@
 
 A Stardew Valley SMAPI mod for adding range highlighting.
 
+You can find this mod on [Nexus Mods](https://www.nexusmods.com/stardewvalley/mods/6752)
+if you prefer.
+
 ## For mod users
 
 This mod adds highlighting for the range of the following items and buildings:

@@ -77,6 +77,11 @@ behave as a toggle switch rather than needing to be held down.
 You can also configure whether to show the inner and outer ranges of bombs,
 and whether to show the ranges of "ticking" bombs placed on the ground.
 
+There are also settings that control whether other (already placed) sprinklers,
+scarecrows, and beehouses have their ranges highlighted if the currently held
+item is a sprinkler, scarecrow, or beehouse.  By default, this is on for
+sprinklers and scarecrows, and off for beehouses.
+
 Finally, the Show*THING*Range options allow you to turn off highlighting of *thing*
 completely.  (Maybe you don't want to see it.  Maybe some other mod is already
 provides highlighting.  In any case, it's not going to hurt my feelings if you

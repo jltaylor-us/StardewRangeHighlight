@@ -5,7 +5,7 @@
 
 ### User-visible Changes
 
-* The Bomber Jacket item no shows a bomb range highlight.
+* The Bomber Jacket item no longer shows a bomb range highlight.
 
 ## Version 1.5.0
 

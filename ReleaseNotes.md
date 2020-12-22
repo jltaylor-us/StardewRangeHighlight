@@ -1,6 +1,15 @@
 
 # Release Notes
 
+## Version 2.1.0
+
+### User-visible Changes
+
+* Integration with the Better Sprinklers mod (if installed)
+  to use its defined sprinkler ranges.  Note that Better
+  Sprinklers will still do its own highlighting in addition
+  to the Range Highlighter highlighting.
+
 ## Version 2.0.0
 
 * Update rendering to handle separate UI scaling vs zoom in

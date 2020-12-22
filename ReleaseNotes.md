@@ -1,6 +1,12 @@
 
 # Release Notes
 
+## Version 2.0.0
+
+* Update rendering to handle separate UI scaling vs zoom in
+  Stardew Valley 1.5 / SMAPI 3.8.  No longer compatible
+  with older versions (thus the major version number bump).
+
 ## Version 1.5.1
 
 ### User-visible Changes

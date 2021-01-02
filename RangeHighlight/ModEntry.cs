@@ -44,6 +44,7 @@ namespace RangeHighlight {
                 { false, true, false}};
             public readonly bool[,] qualitySprinkler;
             public readonly bool[,] iridiumSprinkler;
+            public readonly bool[,] iridiumSprinklerWithNozzle;
             public bool[,] prismaticSprinkler;
             public readonly bool[,] beehouse;
             public readonly bool[,] scarecrow;
@@ -68,6 +69,7 @@ namespace RangeHighlight {
                 this.api = api;
                 qualitySprinkler = api.GetSquareCircle(1);
                 iridiumSprinkler = api.GetSquareCircle(2);
+                iridiumSprinklerWithNozzle = api.GetSquareCircle(3);
                 prismaticSprinkler = api.GetSquareCircle(3);
                 beehouse = api.GetManhattanCircle(5);
                 scarecrow = api.GetCartesianCircleWithTruncate(8);
@@ -101,11 +103,11 @@ namespace RangeHighlight {
                 junimoHut[r - 1, r] = junimoHut[r + 1, r] = false;
             }
 
-            public bool[,] GetSprinkler(string name) {
-                if (name.Contains("iridium")) return iridiumSprinkler;
-                if (name.Contains("quality")) return qualitySprinkler;
+            public bool[,] GetSprinkler(string name, bool hasPressureNozzleAttached) {
+                if (name.Contains("iridium")) return hasPressureNozzleAttached ? iridiumSprinklerWithNozzle : iridiumSprinkler;
+                if (name.Contains("quality")) return hasPressureNozzleAttached ? iridiumSprinkler : qualitySprinkler;
                 if (name.Contains("prismatic")) return prismaticSprinkler;
-                return sprinkler;
+                return hasPressureNozzleAttached ? qualitySprinkler : sprinkler;
             }
 
             public BombRange GetBomb(string name) {
@@ -150,7 +152,14 @@ namespace RangeHighlight {
                     config.ShowOtherSprinklersWhenHoldingSprinkler,
                     (item, itemID, itemName) => {
                         if (itemName.Contains("sprinkler")) {
-                            return new Tuple<Color, bool[,]>(config.SprinklerRangeTint, defaultShapes.GetSprinkler(itemName));
+                            bool hasPressureNozzleAttached = false;
+                            if (item is StardewValley.Object obj) {
+                                var heldObj = obj.heldObject.Value;
+                                if (heldObj != null && heldObj.ParentSheetIndex == 915) {
+                                    hasPressureNozzleAttached = true;
+                                }
+                            }
+                            return new Tuple<Color, bool[,]>(config.SprinklerRangeTint, defaultShapes.GetSprinkler(itemName, hasPressureNozzleAttached));
                         } else {
                             return null;
                         }

@@ -1,6 +1,12 @@
 
 # Release Notes
 
+## Version 2.2.1
+
+### User-visible Changes
+
+* Fix split-screen issues (I hope).
+
 ## Version 2.2.0
 
 ### User-visible Changes

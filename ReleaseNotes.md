@@ -1,6 +1,13 @@
 
 # Release Notes
 
+## Version 2.3.0
+
+### User-visible Changes
+
+* Integration with Simple Sprinklers mod (if installed)
+  to use its defined sprinkler ranges.
+
 ## Version 2.2.1
 
 ### User-visible Changes

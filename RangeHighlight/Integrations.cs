@@ -12,6 +12,7 @@ namespace RangeHighlight {
             IntegratePrismaticTools();
             IntegrateBetterJunimos();
             IntegrateBetterSprinklers();
+            IntegrateSimpleSprinklers();
         }
 
         private void IntegratePrismaticTools() {
@@ -39,6 +40,22 @@ namespace RangeHighlight {
                 (item, itemID, itemName) => {
                     Vector2[] tiles;
                     if (api.GetSprinklerCoverage().TryGetValue(itemID, out tiles)) {
+                        return new Tuple<Color, bool[,]>(theMod.config.SprinklerRangeTint, PointsToMask(tiles));
+                    } else {
+                        return null;
+                    }
+                });
+        }
+        private void IntegrateSimpleSprinklers() {
+            ISimplerSprinklerApi api = theMod.helper.ModRegistry.GetApi<ISimplerSprinklerApi>("tZed.SimpleSprinkler");
+            if (api == null) return;
+            theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler");
+            theMod.api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/simple-sprinkler",
+                theMod.config.ShowSprinklerRangeKey,
+                theMod.config.ShowOtherSprinklersWhenHoldingSprinkler,
+                (item, itemID, itemName) => {
+                    Vector2[] tiles;
+                    if (api.GetNewSprinklerCoverage().TryGetValue(itemID, out tiles)) {
                         return new Tuple<Color, bool[,]>(theMod.config.SprinklerRangeTint, PointsToMask(tiles));
                     } else {
                         return null;
@@ -73,5 +90,7 @@ namespace RangeHighlight {
         int GetMaxGridSize();
         IDictionary<int, Vector2[]> GetSprinklerCoverage();
     }
-
+    public interface ISimplerSprinklerApi {
+        IDictionary<int, Vector2[]> GetNewSprinklerCoverage();
+    }
 }

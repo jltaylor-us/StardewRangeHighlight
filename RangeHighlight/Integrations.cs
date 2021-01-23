@@ -35,18 +35,27 @@ namespace RangeHighlight {
         }
         private void IntegrateSprinklerCommon(string highlighterName, Func<IDictionary<int,Vector2[]>> getCoverage, bool fallbackToDefault) {
             theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler");
+            IDictionary<int, bool[,]> coverageMask = new Dictionary<int, bool[,]>();
             theMod.api.AddItemRangeHighlighter(highlighterName,
                 theMod.config.ShowSprinklerRangeKey,
                 theMod.config.ShowOtherSprinklersWhenHoldingSprinkler,
+                () => {
+                    foreach(var entry in getCoverage()) {
+                        coverageMask[entry.Key] = PointsToMask(entry.Value);
+                    }
+                },
                 (item, itemID, itemName) => {
-                    Vector2[] tiles;
-                    if (getCoverage().TryGetValue(itemID, out tiles)) {
-                        return new Tuple<Color, bool[,]>(theMod.config.SprinklerRangeTint, PointsToMask(tiles));
+                    bool[,] tiles;
+                    if (coverageMask.TryGetValue(itemID, out tiles)) {
+                        return new Tuple<Color, bool[,]>(theMod.config.SprinklerRangeTint, tiles);
                     } else if (fallbackToDefault) {
                         return theMod.GetDefaultSprinklerHighlight(item, itemID, itemName);
                     } else {
                         return null;
                     }
+                },
+                () => {
+                    coverageMask.Clear();
                 });
         }
         private void IntegrateBetterSprinklers() {

@@ -1,6 +1,19 @@
 
 # Release Notes
 
+## Version 2.5.0
+
+### User-visible Changes
+
+* Improved performance of integrations with other sprinkler mods
+  on farms with lots of items (e.g., debris).
+
+### API Changes
+
+* Add a new signature of `AddItemRangeHighlighter` with
+  callbacks for the beginning and end of each "batch" of
+  highlight range calculation.
+
 ## Version 2.4.0
 
 ### User-visible Changes

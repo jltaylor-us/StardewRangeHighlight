@@ -53,9 +53,13 @@ namespace RangeHighlight {
         }
         private class ItemHighlighter : Highlighter<ItemHighlightFunction> {
             public bool highlightOthersWhenHeld { get; }
-            public ItemHighlighter(string uniqueId, SButton? hotkey, bool highlightOthersWhenHeld, ItemHighlightFunction highlighter)
+            public Action onStart { get; }
+            public Action onFinish { get; }
+            public ItemHighlighter(string uniqueId, SButton? hotkey, bool highlightOthersWhenHeld, ItemHighlightFunction highlighter, Action onStart = null, Action onFinish = null)
                 : base(uniqueId, hotkey, highlighter) {
                 this.highlightOthersWhenHeld = highlightOthersWhenHeld;
+                this.onStart = onStart;
+                this.onFinish = onFinish;
             }
         }
         // NB: blueprintHighlighters and buildingHighlighters are parallel lists.  The highlighter in a blueprintHighlighter may be null.
@@ -125,8 +129,8 @@ namespace RangeHighlight {
             buildingHighlighters.RemoveAll(elt => elt.uniqueId == uniqueId);
         }
 
-        public void AddItemHighlighter(string uniqueId, SButton? hotkey, bool highlightOthersWhenHeld, ItemHighlightFunction highlighter) {
-            itemHighlighters.Insert(0, new ItemHighlighter(uniqueId, hotkey, highlightOthersWhenHeld, highlighter));
+        public void AddItemHighlighter(string uniqueId, SButton? hotkey, bool highlightOthersWhenHeld, ItemHighlightFunction highlighter, Action onStart = null, Action onFinish = null) {
+            itemHighlighters.Insert(0, new ItemHighlighter(uniqueId, hotkey, highlightOthersWhenHeld, highlighter, onStart, onFinish));
         }
 
         public void RemoveItemHighlighter(string uniqueId) {
@@ -163,6 +167,7 @@ namespace RangeHighlight {
             if (Game1.eventUp || Game1.currentLocation == null) return;
             bool[] runBuildingHighlighter = new bool[buildingHighlighters.Count];
             bool[] runItemHighlighter = new bool[itemHighlighters.Count];
+            bool[] itemHighlighterStartCalled = new bool[itemHighlighters.Count];
             bool iterateBuildings = false;
             bool iterateItems = false;
 
@@ -206,6 +211,10 @@ namespace RangeHighlight {
                 string itemName = item.Name.ToLower();
                 int itemID = item.parentSheetIndex;
                 for (int i = 0; i < itemHighlighters.Count; ++i) {
+                    if (!itemHighlighterStartCalled[i]) {
+                        itemHighlighters[i].onStart?.Invoke();
+                        itemHighlighterStartCalled[i] = true;
+                    }
                     var ret = itemHighlighters[i].highlighter(item, itemID, itemName);
                     if (ret != null) {
                         var cursorTile = GetCursorTile();
@@ -274,6 +283,10 @@ namespace RangeHighlight {
                     int itemID = item.parentSheetIndex;
                     for (int i = 0; i < itemHighlighters.Count; ++i) {
                         if (runItemHighlighter[i]) {
+                            if (!itemHighlighterStartCalled[i]) {
+                                itemHighlighters[i].onStart?.Invoke();
+                                itemHighlighterStartCalled[i] = true;
+                            }
                             var ret = itemHighlighters[i].highlighter(item, itemID, itemName);
                             if (ret != null) {
                                 AddHighlightTiles(ret.Item1, ret.Item2, (int)item.TileLocation.X, (int)item.TileLocation.Y);
@@ -297,7 +310,12 @@ namespace RangeHighlight {
                 }
 
             }
-        }
 
+            for (int i = 0; i < itemHighlighters.Count; ++i) {
+                if (itemHighlighterStartCalled[i]) {
+                    itemHighlighters[i].onFinish?.Invoke();
+                }
+            }
+        }
     }
 }

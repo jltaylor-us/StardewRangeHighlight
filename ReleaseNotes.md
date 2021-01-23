@@ -1,6 +1,17 @@
 
 # Release Notes
 
+## Version 2.4.0
+
+### User-visible Changes
+
+* Integration with Line Sprinklers mod (if installed)
+  to support line sprinkler ranges.
+
+* Update Better Sprinklers and Simple Sprinklers integrations
+  to not show sprinkler highlights if ShowSprinklerRange is
+  turned off in the configuration.
+
 ## Version 2.3.0
 
 ### User-visible Changes

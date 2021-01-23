@@ -117,6 +117,20 @@ namespace RangeHighlight {
             }
         }
 
+        internal Tuple<Color, bool[,]> GetDefaultSprinklerHighlight(Item item, int itemID, string itemName) {
+            if (itemName.Contains("sprinkler")) {
+                bool hasPressureNozzleAttached = false;
+                if (item is StardewValley.Object obj) {
+                    var heldObj = obj.heldObject.Value;
+                    if (heldObj != null && heldObj.ParentSheetIndex == 915) {
+                        hasPressureNozzleAttached = true;
+                    }
+                }
+                return new Tuple<Color, bool[,]>(config.SprinklerRangeTint, defaultShapes.GetSprinkler(itemName, hasPressureNozzleAttached));
+            } else {
+                return null;
+            }
+        }
         private void installDefaultHighlights() {
             if (config.ShowJunimoRange) {
                 api.AddBuildingRangeHighlighter("jltaylor-us.RangeHighlight/junimoHut", config.ShowJunimoRangeKey,
@@ -149,21 +163,7 @@ namespace RangeHighlight {
             }
             if (config.ShowSprinklerRange) {
                 api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler", config.ShowSprinklerRangeKey,
-                    config.ShowOtherSprinklersWhenHoldingSprinkler,
-                    (item, itemID, itemName) => {
-                        if (itemName.Contains("sprinkler")) {
-                            bool hasPressureNozzleAttached = false;
-                            if (item is StardewValley.Object obj) {
-                                var heldObj = obj.heldObject.Value;
-                                if (heldObj != null && heldObj.ParentSheetIndex == 915) {
-                                    hasPressureNozzleAttached = true;
-                                }
-                            }
-                            return new Tuple<Color, bool[,]>(config.SprinklerRangeTint, defaultShapes.GetSprinkler(itemName, hasPressureNozzleAttached));
-                        } else {
-                            return null;
-                        }
-                    });
+                    config.ShowOtherSprinklersWhenHoldingSprinkler, GetDefaultSprinklerHighlight);
             }
             if (config.ShowBeehouseRange) {
                 api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/beehouse", config.ShowBeehouseRangeKey,

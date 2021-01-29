@@ -215,7 +215,12 @@ namespace RangeHighlight {
                                     range = defaultShapes.megaBomb;
                                     break;
                                 default:
-                                    return null;
+                                    if (sprite.bombRadius > 0) {
+                                        range = new DefaultShapes.BombRange(api.GetCartesianCircleWithRound((uint)sprite.bombRadius, false), new bool[0, 0], api.GetSquareCircle((uint)sprite.bombRadius, false));
+                                        break;
+                                    } else {
+                                        return null;
+                                    }
                             }
                             return bombHelper(range,
                                 (int)(sprite.position.X / Game1.tileSize), (int)(sprite.position.Y / Game1.tileSize));

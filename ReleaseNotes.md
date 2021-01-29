@@ -1,6 +1,12 @@
 
 # Release Notes
 
+## Version 2.6.0
+
+### User-visible Changes
+
+* Added bomb highlighting to things that explode but aren't bombs
+
 ## Version 2.5.0
 
 ### User-visible Changes

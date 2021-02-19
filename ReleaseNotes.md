@@ -1,6 +1,14 @@
 
 # Release Notes
 
+## Version 2.7.0
+
+### User-visible Changes
+
+* Added `showHeldBombRange` config option.  Note that the `ShowBombRange`
+  option must be on for either `showHeldBombRange` or `showPlacedBombRange`
+  to have effect.
+
 ## Version 2.6.0
 
 ### User-visible Changes

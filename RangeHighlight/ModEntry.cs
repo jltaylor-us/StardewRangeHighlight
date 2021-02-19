@@ -178,7 +178,7 @@ namespace RangeHighlight {
             }
             if (config.ShowBombRange) {
                 if (config.showHeldBombRange) {
-                    api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/bomb", null, true,
+                    api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/bomb", new KeybindList(), true,
                         (item, itemID, itemName) => {
                             DefaultShapes.BombRange range;
                             switch (itemID) {

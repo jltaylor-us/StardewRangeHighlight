@@ -10,6 +10,7 @@ namespace RangeHighlight {
         public Integrations(ModEntry theMod) {
             this.theMod = theMod;
             IntegratePrismaticTools();
+            IntegrateRadioactiveTools();
             IntegrateBetterJunimos();
             if (theMod.config.ShowSprinklerRange) {
                 IntegrateBetterSprinklers();
@@ -22,6 +23,11 @@ namespace RangeHighlight {
             IPrismaticToolsAPI api = theMod.helper.ModRegistry.GetApi<IPrismaticToolsAPI>("stokastic.PrismaticTools");
             if (api == null) return;
             theMod.defaultShapes.prismaticSprinkler = theMod.api.GetSquareCircle((uint)api.SprinklerRange);
+        }
+        private void IntegrateRadioactiveTools() {
+            RadioactiveToolsAPI api = theMod.helper.ModRegistry.GetApi<RadioactiveToolsAPI>("kakashigr.RadioactiveTools");
+            if (api == null) return;
+            theMod.defaultShapes.radioactiveSprinkler = theMod.api.GetSquareCircle((uint)api.SprinklerRange);
         }
         private void IntegrateBetterJunimos() {
             IBetterJunimosAPI api = theMod.helper.ModRegistry.GetApi<IBetterJunimosAPI>("hawkfalcon.BetterJunimos");
@@ -110,5 +116,9 @@ namespace RangeHighlight {
     public interface ILineSprinklersApi {
         int GetMaxGridSize();
         IDictionary<int, Vector2[]> GetSprinklerCoverage();
+    }
+    public interface RadioactiveToolsAPI {
+        int SprinklerRange { get; }
+        int SprinklerIndex { get; }
     }
 }

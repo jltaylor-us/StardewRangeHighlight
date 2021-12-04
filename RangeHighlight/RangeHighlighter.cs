@@ -209,7 +209,7 @@ namespace RangeHighlight {
             if (Game1.player.CurrentItem != null) {
                 Item item = Game1.player.CurrentItem;
                 string itemName = item.Name.ToLower();
-                int itemID = item.parentSheetIndex;
+                int itemID = item.ParentSheetIndex;
                 for (int i = 0; i < itemHighlighters.Count; ++i) {
                     if (!itemHighlighterStartCalled[i]) {
                         itemHighlighters[i].onStart?.Invoke();
@@ -280,7 +280,7 @@ namespace RangeHighlight {
             if (iterateItems) {
                 foreach (var item in Game1.currentLocation.Objects.Values) {
                     string itemName = item.Name.ToLower();
-                    int itemID = item.parentSheetIndex;
+                    int itemID = item.ParentSheetIndex;
                     for (int i = 0; i < itemHighlighters.Count; ++i) {
                         if (runItemHighlighter[i]) {
                             if (!itemHighlighterStartCalled[i]) {

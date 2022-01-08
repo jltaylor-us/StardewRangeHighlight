@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Jamie Taylor
+﻿// Copyright 2020-2022 Jamie Taylor
 using System;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
@@ -19,6 +19,7 @@ namespace RangeHighlight {
 
         public override void Entry(IModHelper helper) {
             this.helper = helper;
+            I18n.Init(helper.Translation);
             config = helper.ReadConfig<ModConfig>();
             highlighter = new RangeHighlighter(this.Monitor, helper, config);
             api = _api_private = new RangeHighlightAPI(this);
@@ -33,6 +34,7 @@ namespace RangeHighlight {
 
         private void onLaunched(object sender, GameLaunchedEventArgs e) {
             integrations = new Integrations(this);
+            ModConfig.RegisterGMCM(this);
         }
 
 

@@ -45,7 +45,6 @@ namespace RangeHighlight {
                 reset: () => theMod.config = new ModConfig(),
                 save: () => theMod.Helper.WriteConfig(theMod.config),
                 titleScreenOnly: true);
-            gmcm.AddParagraph(mod, I18n.Config_NeedsRestart);
 
             var gmcmOpt = theMod.helper.ModRegistry.GetApi<GMCMOptionsAPI>("jltaylor-us.GMCMOptions");
             if (gmcmOpt is null) {

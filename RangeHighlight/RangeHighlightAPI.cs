@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Jamie Taylor
+﻿// Copyright 2020-2022 Jamie Taylor
 using System;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
@@ -8,16 +8,12 @@ using StardewValley.Buildings;
 
 namespace RangeHighlight {
     public class RangeHighlightAPI : IRangeHighlightAPI {
-        private ModConfig config;
-        private RangeHighlighter rangeHighlighter;
+        private readonly ModEntry theMod;
+        private ModConfig config => theMod.config;
+        private RangeHighlighter rangeHighlighter => theMod.highlighter;
 
         public RangeHighlightAPI(ModEntry mod) {
-            // can't take these types as args directly because they are less
-            // visible than this class (which must be public because SMAPI
-            // doesn't currently support using a non-public implementation
-            // class for a mod's API).
-            this.config = mod.config;
-            this.rangeHighlighter = mod.highlighter;
+            theMod = mod;
         }
 
         // ----- Getters for the currently configured tint colors ----

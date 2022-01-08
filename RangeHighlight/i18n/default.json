@@ -1,7 +1,6 @@
 ﻿// Copyright 2022 Jamie Taylor
 {
     // Strings used in the config menu
-    "config.needs-restart": "Most options require a restart of Stardew Valley before the new values take effect.",
     "config.install-gmcm-options": "If you install the GMCM Options mod then you will be able to configure colors in this menu.",
     "config.enable": "Enable",
     "config.hotkey": "Hotkey",

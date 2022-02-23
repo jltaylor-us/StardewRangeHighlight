@@ -1,6 +1,12 @@
 
 # Release Notes
 
+## Version 3.2.0
+
+### User-visible Changes
+
+* Show beehouse range from Better Beehouses (if installed)
+
 ## Version 3.1.0
 
 ### User-visible Changes

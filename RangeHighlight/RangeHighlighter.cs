@@ -70,7 +70,7 @@ namespace RangeHighlight {
 
         public RangeHighlighter(ModEntry mod) {
             theMod = mod;
-            tileTexture = helper.Content.Load<Texture2D>("tile.png");
+            tileTexture = helper.ModContent.Load<Texture2D>("tile.png");
             helper.Events.Display.RenderedWorld += OnRenderedWorld;
             helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
         }
@@ -215,6 +215,7 @@ namespace RangeHighlight {
                 Item item = Game1.player.CurrentItem;
                 string itemName = item.Name.ToLower();
                 int itemID = item.ParentSheetIndex;
+                Utility.IsNormalObjectAtParentSheetIndex(item, itemID);
                 for (int i = 0; i < itemHighlighters.Count; ++i) {
                     if (!itemHighlighterStartCalled[i]) {
                         itemHighlighters[i].onStart?.Invoke();

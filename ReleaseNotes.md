@@ -1,7 +1,12 @@
 
 # Release Notes
 
-## Version 3.2.0
+## Version 3.3.1
+
+* Fix order of checking "IsScarecrow" and using the game's get scarecrow radius
+  function vs. checking by item name.
+
+## Version 3.3.0
 
 * Fix bug where holding the Blue Armchair would show the mega-bomb range
 

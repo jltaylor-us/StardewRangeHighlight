@@ -1,6 +1,11 @@
 
 # Release Notes
 
+## Version 3.4.0
+
+* Add a new configuration option for whether building highlighters (e.g.,
+  Junimo Huts) run when the mouse is over the building.
+
 ## Version 3.3.1
 
 * Fix order of checking "IsScarecrow" and using the game's get scarecrow radius

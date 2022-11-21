@@ -16,6 +16,7 @@ namespace RangeHighlight {
         internal DefaultShapes defaultShapes;
         internal IModHelper helper;
         private Integrations integrations;
+        internal IInputToolsAPI inputToolsAPI;
 
         public override void Entry(IModHelper helper) {
             this.helper = helper;

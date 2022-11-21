@@ -150,9 +150,17 @@ namespace RangeHighlight {
             tasHighlighters.RemoveAll(elt => elt.uniqueId == uniqueId);
         }
 
-        internal Vector2 GetCursorTile() {
-            return helper.Input.GetCursorPosition().Tile;
-            // Work around bug in SMAPI 3.8.0 - fixed in 3.8.2
+        internal Vector2 GetCursorTile(bool useInputToolAPI = true) {
+            // If optional mod available return controller-friendly position
+            if (useInputToolAPI && this.theMod.inputToolsAPI != null)
+                return this.theMod.inputToolsAPI.Global.GetPlacementTile();
+
+            // If not, return best guess, which isn't great with controller but better than nothing
+            if (Game1.wasMouseVisibleThisFrame)
+                return helper.Input.GetCursorPosition().Tile;
+            else
+                return helper.Input.GetCursorPosition().GrabTile;
+
             //var mouse = Microsoft.Xna.Framework.Input.Mouse.GetState();
             //return new Vector2((Game1.viewport.X + mouse.X / Game1.options.zoomLevel) / Game1.tileSize,
             //    (Game1.viewport.Y + mouse.Y / Game1.options.zoomLevel) / Game1.tileSize);
@@ -182,7 +190,7 @@ namespace RangeHighlight {
                         if (blueprintHighlighters[i].highlighter != null) {
                             var ret = blueprintHighlighters[i].highlighter(carpenterMenu.CurrentBlueprint);
                             if (ret != null) {
-                                var cursorTile = GetCursorTile();
+                                var cursorTile = GetCursorTile(false);
                                 AddHighlightTiles(ret.Item1, ret.Item2, (int)cursorTile.X + ret.Item3, (int)cursorTile.Y + ret.Item4);
                                 runBuildingHighlighter[i] = true;
                                 iterateBuildings = true;

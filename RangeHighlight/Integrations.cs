@@ -21,6 +21,7 @@ namespace RangeHighlight {
                 IntegrateSimpleSprinklers();
                 IntegrateLineSprinklers();
             }
+            IntegrateInputTool();
         }
 
         private void IntegratePrismaticTools() {
@@ -129,6 +130,20 @@ namespace RangeHighlight {
             }
             return result;
         }
+        private void IntegrateInputTool(){
+            // Load the optional enternal input tool
+            try {
+                theMod.inputToolsAPI = theMod.helper.ModRegistry.GetApi<IInputToolsAPI>("Sagittaeri.InputTools");
+            }
+            catch (Exception exception) {
+                theMod.Monitor.Log($"Failed to load Sagittaeri.InputTools. Reason: {exception.Message}", LogLevel.Error);
+            }
+            if (theMod.inputToolsAPI != null) {
+                theMod.Monitor.Log("Loaded Sagittaeri.InputTools successfully - controller will be supported", LogLevel.Debug);
+            }
+            else
+                theMod.Monitor.Log("For controller support, install Sagittaeri.InputTools mod", LogLevel.Warn);
+        }
     }
 
     public interface IPrismaticToolsAPI {
@@ -158,5 +173,14 @@ namespace RangeHighlight {
     public interface IBetterBeehousesAPI {
         public bool GetEnabledHere(GameLocation location, bool isWinter);
         public int GetSearchRadius();
+    }
+
+    public interface IInputToolsAPI
+    {
+        public IInputStack Global { get; }
+        public interface IInputStack
+        {
+            public Vector2 GetPlacementTile();
+        }
     }
 }

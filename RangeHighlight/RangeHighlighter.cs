@@ -215,7 +215,6 @@ namespace RangeHighlight {
                 Item item = Game1.player.CurrentItem;
                 string itemName = item.Name.ToLower();
                 int itemID = item.ParentSheetIndex;
-                Utility.IsNormalObjectAtParentSheetIndex(item, itemID);
                 for (int i = 0; i < itemHighlighters.Count; ++i) {
                     if (!itemHighlighterStartCalled[i]) {
                         itemHighlighters[i].onStart?.Invoke();

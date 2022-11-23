@@ -222,12 +222,24 @@ namespace RangeHighlight {
                     }
                     var ret = itemHighlighters[i].highlighter(item, itemID, itemName);
                     if (ret != null) {
-                        var cursorTile = GetCursorTile();
-                        AddHighlightTiles(ret.Item1, ret.Item2, (int)cursorTile.X, (int)cursorTile.Y);
                         if (itemHighlighters[i].highlightOthersWhenHeld) {
                             runItemHighlighter[i] = true;
                         }
                         iterateItems = true;
+                        var cursorTile = GetCursorTile();
+                        var actionTile = cursorTile;
+                        if (!Game1.wasMouseVisibleThisFrame || Game1.mouseCursorTransparency == 0f || !Utility.tileWithinRadiusOfPlayer((int)cursorTile.X, (int)cursorTile.Y, 1, Game1.player)) {
+                            var grabTile = Game1.player.GetGrabTile();
+                            var x = Game1.isCheckingNonMousePlacement;
+                            Game1.isCheckingNonMousePlacement = true;
+                            actionTile = Utility.GetNearbyValidPlacementPosition(Game1.player, Game1.currentLocation, item, (int)grabTile.X * 64 + 32, (int)grabTile.Y * 64 + 32) / 64;
+                            Game1.isCheckingNonMousePlacement = x;
+                        }
+                        if (config.HighlightActionLocation) AddHighlightTiles(ret.Item1, ret.Item2, (int)actionTile.X, (int)actionTile.Y);
+                        if ((!config.HighlightActionLocation || cursorTile != actionTile)
+                            && Game1.wasMouseVisibleThisFrame && Game1.mouseCursorTransparency != 0f) {
+                            AddHighlightTiles(ret.Item1, ret.Item2, (int)cursorTile.X, (int)cursorTile.Y);
+                        }
                         break;
                     }
                 }

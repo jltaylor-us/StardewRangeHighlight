@@ -177,8 +177,8 @@ namespace RangeHighlight {
 
     public interface IInputToolsAPI
     {
-        public IInputStack Global { get; }
-        public interface IInputStack
+        public IInputLayer Global { get; }
+        public interface IInputLayer
         {
             public Vector2 GetPlacementTile();
         }

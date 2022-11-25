@@ -7,8 +7,8 @@ using StardewValley;
 
 namespace RangeHighlight {
     internal class Integrations {
-        private ModEntry theMod;
-        public Integrations(ModEntry theMod) {
+        private TheMod theMod;
+        public Integrations(TheMod theMod) {
             this.theMod = theMod;
             IntegratePrismaticTools();
             IntegrateRadioactiveTools();
@@ -24,17 +24,17 @@ namespace RangeHighlight {
         }
 
         private void IntegratePrismaticTools() {
-            IPrismaticToolsAPI api = theMod.helper.ModRegistry.GetApi<IPrismaticToolsAPI>("stokastic.PrismaticTools");
+            IPrismaticToolsAPI? api = theMod.helper.ModRegistry.GetApi<IPrismaticToolsAPI>("stokastic.PrismaticTools");
             if (api == null) return;
             theMod.defaultShapes.prismaticSprinkler = theMod.api.GetSquareCircle((uint)api.SprinklerRange);
         }
         private void IntegrateRadioactiveTools() {
-            RadioactiveToolsAPI api = theMod.helper.ModRegistry.GetApi<RadioactiveToolsAPI>("kakashigr.RadioactiveTools");
+            RadioactiveToolsAPI? api = theMod.helper.ModRegistry.GetApi<RadioactiveToolsAPI>("kakashigr.RadioactiveTools");
             if (api == null) return;
             theMod.defaultShapes.radioactiveSprinkler = theMod.api.GetSquareCircle((uint)api.SprinklerRange);
         }
         private void IntegrateBetterJunimos() {
-            IBetterJunimosAPI api = theMod.helper.ModRegistry.GetApi<IBetterJunimosAPI>("hawkfalcon.BetterJunimos");
+            IBetterJunimosAPI? api = theMod.helper.ModRegistry.GetApi<IBetterJunimosAPI>("hawkfalcon.BetterJunimos");
             if (api == null) return;
             int r = api.GetJunimoHutMaxRadius();
             if (r > 1) {
@@ -44,7 +44,7 @@ namespace RangeHighlight {
             }
         }
         private void IntegrateBetterBeehouses() {
-            IBetterBeehousesAPI api = theMod.helper.ModRegistry.GetApi<IBetterBeehousesAPI>("tlitookilakin.BetterBeehouses");
+            IBetterBeehousesAPI? api = theMod.helper.ModRegistry.GetApi<IBetterBeehousesAPI>("tlitookilakin.BetterBeehouses");
             if (api == null) return;
             theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/beehouse");
             bool[,] beehouseShape = { };
@@ -85,8 +85,7 @@ namespace RangeHighlight {
                     }
                 },
                 (item, itemID, itemName) => {
-                    bool[,] tiles;
-                    if (coverageMask.TryGetValue(itemID, out tiles)) {
+                    if (coverageMask.TryGetValue(itemID, out bool[,]? tiles)) {
                         return new Tuple<Color, bool[,]>(theMod.config.SprinklerRangeTint, tiles);
                     } else if (fallbackToDefault) {
                         return theMod.GetDefaultSprinklerHighlight(item, itemID, itemName);
@@ -99,19 +98,19 @@ namespace RangeHighlight {
                 });
         }
         private void IntegrateBetterSprinklers() {
-            IBetterSprinklersApi api = theMod.helper.ModRegistry.GetApi<IBetterSprinklersApi>("Speeder.BetterSprinklers");
+            IBetterSprinklersApi? api = theMod.helper.ModRegistry.GetApi<IBetterSprinklersApi>("Speeder.BetterSprinklers");
             if (api == null) return;
             theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler");
             IntegrateSprinklerCommon("jltaylor-us.RangeHighlight/better-sprinkler", api.GetSprinklerCoverage, false);
         }
         private void IntegrateSimpleSprinklers() {
-            ISimplerSprinklerApi api = theMod.helper.ModRegistry.GetApi<ISimplerSprinklerApi>("tZed.SimpleSprinkler");
+            ISimplerSprinklerApi? api = theMod.helper.ModRegistry.GetApi<ISimplerSprinklerApi>("tZed.SimpleSprinkler");
             if (api == null) return;
             theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler");
             IntegrateSprinklerCommon("jltaylor-us.RangeHighlight/simple-sprinkler", api.GetNewSprinklerCoverage, false);
         }
         private void IntegrateLineSprinklers() {
-            ILineSprinklersApi api = theMod.helper.ModRegistry.GetApi<ILineSprinklersApi>("hootless.LineSprinklers");
+            ILineSprinklersApi? api = theMod.helper.ModRegistry.GetApi<ILineSprinklersApi>("hootless.LineSprinklers");
             if (api == null) return;
             theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler");
             IntegrateSprinklerCommon("jltaylor-us.RangeHighlight/line-sprinkler", api.GetSprinklerCoverage, true);

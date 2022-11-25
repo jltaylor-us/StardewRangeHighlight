@@ -1,24 +1,43 @@
 ﻿// Copyright 2020-2022 Jamie Taylor
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Buildings;
+using static RangeHighlight.TheMod;
 
 namespace RangeHighlight {
+    // why the tiny wrapper class?  So I don't have to play games with the
+    // nullability checking for all of the fields in TheMod.
     public class ModEntry : Mod {
+        internal TheMod? theMod;
+        public override void Entry(IModHelper helper) {
+            theMod = new TheMod(helper, Monitor, ModManifest);
+        }
+
+        public override object? GetApi() {
+            return theMod?.GetApi();
+        }
+    }
+    public class TheMod {
+        internal IMonitor Monitor { get; }
+        internal IManifest ModManifest { get; }
         internal ModConfig config;
         internal RangeHighlighter highlighter;
         internal IRangeHighlightAPI api;
         private RangeHighlightAPI _api_private; // for testing non-public stuff
         internal DefaultShapes defaultShapes;
         internal IModHelper helper;
-        private Integrations integrations;
+        internal IModHelper Helper => helper;
+        private Integrations? integrations;
 
-        public override void Entry(IModHelper helper) {
+        public TheMod(IModHelper helper, IMonitor monitor, IManifest modManifest) {
             this.helper = helper;
+            this.Monitor = monitor;
+            this.ModManifest = modManifest;
             I18n.Init(helper.Translation);
             try {
                 config = helper.ReadConfig<ModConfig>();
@@ -34,20 +53,20 @@ namespace RangeHighlight {
             helper.Events.GameLoop.ReturnedToTitle += OnReturnedToTitle;
         }
 
-        public override object GetApi() {
+        public object GetApi() {
             return api;
         }
 
-        private void onLaunched(object sender, GameLaunchedEventArgs e) {
+        private void onLaunched(object? sender, GameLaunchedEventArgs e) {
             ModConfig.RegisterGMCM(this);
         }
 
-        private void OnSaveLoaded(object sender, SaveLoadedEventArgs e) {
+        private void OnSaveLoaded(object? sender, SaveLoadedEventArgs e) {
             installDefaultHighlights();
             integrations = new Integrations(this);
         }
 
-        private void OnReturnedToTitle(object sender, ReturnedToTitleEventArgs e) {
+        private void OnReturnedToTitle(object? sender, ReturnedToTitleEventArgs e) {
             integrations = null;
             highlighter?.ClearAllHighlighters();
         }
@@ -118,6 +137,7 @@ namespace RangeHighlight {
                     api.GetSquareCircle(7, false));
             }
 
+            [MemberNotNull(nameof(junimoHut))]
             public void SetJunimoRange(uint r) {
                 junimoHut = api.GetSquareCircle(r);
                 junimoHut[r - 1, r - 1] = junimoHut[r, r - 1] = junimoHut[r + 1, r - 1] = false;
@@ -139,7 +159,7 @@ namespace RangeHighlight {
             }
         }
 
-        internal Tuple<Color, bool[,]> GetDefaultSprinklerHighlight(Item item, int itemID, string itemName) {
+        internal Tuple<Color, bool[,]>? GetDefaultSprinklerHighlight(Item item, int itemID, string itemName) {
             if (itemName.Contains("sprinkler")) {
                 bool hasPressureNozzleAttached = false;
                 if (item is StardewValley.Object obj) {

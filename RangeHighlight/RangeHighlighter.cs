@@ -13,13 +13,13 @@ using StardewValley.Locations;
 using StardewValley.Menus;
 
 namespace RangeHighlight {
-    using BlueprintHighlightFunction = Func<BluePrint, Tuple<Color, bool[,], int, int>>;
-    using BuildingHighlightFunction = Func<Building, Tuple<Color, bool[,], int, int>>;
-    using ItemHighlightFunction = Func<Item, int, string, Tuple<Color, bool[,]>>;
-    using TASHighlightFunction = Func<TemporaryAnimatedSprite, Tuple<Color, bool[,]>>;
+    using BlueprintHighlightFunction = Func<BluePrint, Tuple<Color, bool[,], int, int>?>;
+    using BuildingHighlightFunction = Func<Building, Tuple<Color, bool[,], int, int>?>;
+    using ItemHighlightFunction = Func<Item, int, string, Tuple<Color, bool[,]>?>;
+    using TASHighlightFunction = Func<TemporaryAnimatedSprite, Tuple<Color, bool[,]>?>;
 
     internal class RangeHighlighter {
-        private readonly ModEntry theMod;
+        private readonly TheMod theMod;
         private IModHelper helper => theMod.helper;
         private ModConfig config => theMod.config;
         private readonly Texture2D tileTexture;
@@ -53,22 +53,20 @@ namespace RangeHighlight {
         }
         private class ItemHighlighter : Highlighter<ItemHighlightFunction> {
             public bool highlightOthersWhenHeld { get; }
-            public Action onStart { get; }
-            public Action onFinish { get; }
-            public ItemHighlighter(string uniqueId, KeybindList hotkey, bool highlightOthersWhenHeld, ItemHighlightFunction highlighter, Action onStart = null, Action onFinish = null)
+            public Action? onStart { get; }
+            public Action? onFinish { get; }
+            public ItemHighlighter(string uniqueId, KeybindList hotkey, bool highlightOthersWhenHeld, ItemHighlightFunction highlighter, Action? onStart = null, Action? onFinish = null)
                 : base(uniqueId, hotkey, highlighter) {
                 this.highlightOthersWhenHeld = highlightOthersWhenHeld;
                 this.onStart = onStart;
                 this.onFinish = onFinish;
             }
         }
-        // NB: blueprintHighlighters and buildingHighlighters are parallel lists.  The highlighter in a blueprintHighlighter may be null.
-        private readonly List<Highlighter<BlueprintHighlightFunction>> blueprintHighlighters = new List<Highlighter<BlueprintHighlightFunction>>();
-        private readonly List<Highlighter<BuildingHighlightFunction>> buildingHighlighters = new List<Highlighter<BuildingHighlightFunction>>();
+        private readonly List<Tuple<Highlighter<BuildingHighlightFunction>, BlueprintHighlightFunction?>> buildingHighlighters = new();
         private readonly List<ItemHighlighter> itemHighlighters = new List<ItemHighlighter>();
         private readonly List<Highlighter<TASHighlightFunction>> tasHighlighters = new List<Highlighter<TASHighlightFunction>>();
 
-        public RangeHighlighter(ModEntry mod) {
+        public RangeHighlighter(TheMod mod) {
             theMod = mod;
             tileTexture = helper.ModContent.Load<Texture2D>("tile.png");
             helper.Events.Display.RenderedWorld += OnRenderedWorld;
@@ -76,13 +74,12 @@ namespace RangeHighlight {
         }
 
         public void ClearAllHighlighters() {
-            blueprintHighlighters.Clear();
             buildingHighlighters.Clear();
             itemHighlighters.Clear();
             tasHighlighters.Clear();
         }
 
-        private void OnRenderedWorld(object sender, RenderedWorldEventArgs e) {
+        private void OnRenderedWorld(object? sender, RenderedWorldEventArgs e) {
             if (highlightTilesMutex.Value.WaitOne(0)) {
                 try {
                     foreach (var tuple in highlightTiles.Value) {
@@ -124,17 +121,15 @@ namespace RangeHighlight {
         }
 
         public void AddBuildingHighlighter(string uniqueId, KeybindList hotkey,
-                BlueprintHighlightFunction blueprintHighlighter, BuildingHighlightFunction buildingHighlighter) {
-            blueprintHighlighters.Insert(0, new Highlighter<BlueprintHighlightFunction>(uniqueId, hotkey, blueprintHighlighter));
-            buildingHighlighters.Insert(0, new Highlighter<BuildingHighlightFunction>(uniqueId, hotkey, buildingHighlighter));
+                BlueprintHighlightFunction? blueprintHighlighter, BuildingHighlightFunction buildingHighlighter) {
+            buildingHighlighters.Insert(0, new (new Highlighter<BuildingHighlightFunction>(uniqueId, hotkey, buildingHighlighter), blueprintHighlighter));
         }
 
         public void RemoveBuildingHighlighter(string uniqueId) {
-            blueprintHighlighters.RemoveAll(elt => elt.uniqueId == uniqueId);
-            buildingHighlighters.RemoveAll(elt => elt.uniqueId == uniqueId);
+            buildingHighlighters.RemoveAll(elt => elt.Item1.uniqueId == uniqueId);
         }
 
-        public void AddItemHighlighter(string uniqueId, KeybindList hotkey, bool highlightOthersWhenHeld, ItemHighlightFunction highlighter, Action onStart = null, Action onFinish = null) {
+        public void AddItemHighlighter(string uniqueId, KeybindList hotkey, bool highlightOthersWhenHeld, ItemHighlightFunction highlighter, Action? onStart = null, Action? onFinish = null) {
             itemHighlighters.Insert(0, new ItemHighlighter(uniqueId, hotkey, highlightOthersWhenHeld, highlighter, onStart, onFinish));
         }
 
@@ -143,7 +138,7 @@ namespace RangeHighlight {
         }
 
         public void AddTemporaryAnimatedSpriteHighlighter(string uniqueId, TASHighlightFunction highlighter) {
-            tasHighlighters.Insert(0, new Highlighter<TASHighlightFunction>(uniqueId, null, highlighter));
+            tasHighlighters.Insert(0, new Highlighter<TASHighlightFunction>(uniqueId, new KeybindList(), highlighter));
         }
 
         public void RemoveTemporaryAnimatedSpriteHighlighter(string uniqueId) {
@@ -158,7 +153,7 @@ namespace RangeHighlight {
             //    (Game1.viewport.Y + mouse.Y / Game1.options.zoomLevel) / Game1.tileSize);
         }
 
-        private void OnUpdateTicked(object sender, UpdateTickedEventArgs e) {
+        private void OnUpdateTicked(object? sender, UpdateTickedEventArgs e) {
             if (!e.IsMultipleOf(6)) return; // only do this once every 0.1s or so
 
             if (highlightTilesMutex.Value.WaitOne()) {
@@ -178,9 +173,9 @@ namespace RangeHighlight {
 
             if (Game1.activeClickableMenu != null) {
                 if (Game1.activeClickableMenu is CarpenterMenu carpenterMenu && Game1.currentLocation is BuildableGameLocation) {
-                    for (int i = 0; i < blueprintHighlighters.Count; ++i) {
-                        if (blueprintHighlighters[i].highlighter != null) {
-                            var ret = blueprintHighlighters[i].highlighter(carpenterMenu.CurrentBlueprint);
+                    for (int i = 0; i < buildingHighlighters.Count; ++i) {
+                        if (buildingHighlighters[i].Item2 is var highlighter && highlighter is not null) {
+                            var ret = highlighter(carpenterMenu.CurrentBlueprint);
                             if (ret != null) {
                                 var cursorTile = GetCursorTile();
                                 AddHighlightTiles(ret.Item1, ret.Item2, (int)cursorTile.X + ret.Item3, (int)cursorTile.Y + ret.Item4);
@@ -200,7 +195,7 @@ namespace RangeHighlight {
                 Building building = buildableLocation.getBuildingAt(Game1.currentCursorTile);
                 if (building != null) {
                     for (int i = 0; i < buildingHighlighters.Count; ++i) {
-                        var ret = buildingHighlighters[i].highlighter(building);
+                        var ret = buildingHighlighters[i].Item1.highlighter(building);
                         if (ret != null) {
                             // ignore return value; it will be re-computed later when we iterate buildings
                             runBuildingHighlighter[i] = true;
@@ -254,8 +249,8 @@ namespace RangeHighlight {
                     showAllToggleState.Value = !showAllToggleState.Value;
                 showAllDownLastState.Value = showAllDown;
                 for (int i = 0; i < buildingHighlighters.Count; ++i) {
-                    buildingHighlighters[i].UpdateHotkeyToggleState(helper);
-                    if (showAllToggleState.Value || buildingHighlighters[i].hotkeyToggleState.Value) {
+                    buildingHighlighters[i].Item1.UpdateHotkeyToggleState(helper);
+                    if (showAllToggleState.Value || buildingHighlighters[i].Item1.hotkeyToggleState.Value) {
                         runBuildingHighlighter[i] = true;
                         iterateBuildings = true;
                     }
@@ -270,7 +265,7 @@ namespace RangeHighlight {
             } else {
                 bool showAll = config.ShowAllRangesKey.IsDown();
                 for (int i = 0; i < buildingHighlighters.Count; ++i) {
-                    if (showAll || buildingHighlighters[i].hotkey.IsDown()) {
+                    if (showAll || buildingHighlighters[i].Item1.hotkey.IsDown()) {
                         runBuildingHighlighter[i] = true;
                         iterateBuildings = true;
                     }
@@ -287,7 +282,7 @@ namespace RangeHighlight {
                 if (Game1.currentLocation is BuildableGameLocation bl) {
                     foreach (Building building in bl.buildings) {
                         for (int i = 0; i < buildingHighlighters.Count; ++i) {
-                            var ret = buildingHighlighters[i].highlighter(building);
+                            var ret = buildingHighlighters[i].Item1.highlighter(building);
                             if (ret != null) {
                                 AddHighlightTiles(ret.Item1, ret.Item2, building.tileX.Value + ret.Item3, building.tileY.Value + ret.Item4);
                                 break;

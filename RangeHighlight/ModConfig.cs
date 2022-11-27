@@ -49,7 +49,7 @@ namespace RangeHighlight {
                 mod: mod,
                 reset: () => theMod.config = new ModConfig(),
                 save: () => theMod.Helper.WriteConfig(theMod.config),
-                titleScreenOnly: true);
+                titleScreenOnly: false);
 
             var gmcmOpt = theMod.helper.ModRegistry.GetApi<GMCMOptionsAPI>("jltaylor-us.GMCMOptions");
             if (gmcmOpt is null) {
@@ -81,7 +81,7 @@ namespace RangeHighlight {
                 tooltip: I18n.Config_HighlightActionLocation_Tooltip,
                 allowedValues: Enum.GetNames<HighlightActionLocationStyle>(),
                 formatAllowedValue: (v) => theMod.helper.Translation.Get("config.highlight-action-location-style." + v),
-                getValue: theMod.config.HighlightActionLocation.ToString,
+                getValue: () => theMod.config.HighlightActionLocation.ToString(),
                 setValue: (v) => theMod.config.HighlightActionLocation = Enum.Parse<HighlightActionLocationStyle>(v));
 
             // Junimo Huts

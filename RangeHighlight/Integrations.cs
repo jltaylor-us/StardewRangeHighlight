@@ -13,14 +13,10 @@ namespace RangeHighlight {
             IntegratePrismaticTools();
             IntegrateRadioactiveTools();
             IntegrateBetterJunimos();
-            if (theMod.config.ShowBeehouseRange) {
-                IntegrateBetterBeehouses();
-            }
-            if (theMod.config.ShowSprinklerRange) {
-                IntegrateBetterSprinklers();
-                IntegrateSimpleSprinklers();
-                IntegrateLineSprinklers();
-            }
+            IntegrateBetterBeehouses();
+            IntegrateBetterSprinklers();
+            IntegrateSimpleSprinklers();
+            IntegrateLineSprinklers();
         }
 
         private void IntegratePrismaticTools() {
@@ -49,8 +45,10 @@ namespace RangeHighlight {
             theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/beehouse");
             bool[,] beehouseShape = { };
             int lastVal = 0;
-            theMod.api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/better-beehouses", theMod.config.ShowBeehouseRangeKey,
-                theMod.config.ShowOtherBeehousesWhenHoldingBeehouse,
+            theMod.api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/better-beehouses",
+                () => theMod.config.ShowBeehouseRange,
+                () => theMod.config.ShowBeehouseRangeKey,
+                () => theMod.config.ShowOtherBeehousesWhenHoldingBeehouse,
                 () => {
                     int r = api.GetSearchRadius();
                     if (r != lastVal) {
@@ -65,7 +63,7 @@ namespace RangeHighlight {
                 },
                 (item, itemID, itemName) => {
                     if (itemName.Contains("bee house")) {
-                        return new Tuple<Color, bool[,]>(theMod.config.BeehouseRangeTint, beehouseShape);
+                        return new List<Tuple<Color, bool[,]>>(1) { new (theMod.config.BeehouseRangeTint, beehouseShape) };
                     } else {
                         return null;
                     }
@@ -77,8 +75,9 @@ namespace RangeHighlight {
             theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler");
             IDictionary<int, bool[,]> coverageMask = new Dictionary<int, bool[,]>();
             theMod.api.AddItemRangeHighlighter(highlighterName,
-                theMod.config.ShowSprinklerRangeKey,
-                theMod.config.ShowOtherSprinklersWhenHoldingSprinkler,
+                () => theMod.config.ShowSprinklerRange,
+                () => theMod.config.ShowSprinklerRangeKey,
+                () => theMod.config.ShowOtherSprinklersWhenHoldingSprinkler,
                 () => {
                     foreach(var entry in getCoverage()) {
                         coverageMask[entry.Key] = PointsToMask(entry.Value);
@@ -86,9 +85,11 @@ namespace RangeHighlight {
                 },
                 (item, itemID, itemName) => {
                     if (coverageMask.TryGetValue(itemID, out bool[,]? tiles)) {
-                        return new Tuple<Color, bool[,]>(theMod.config.SprinklerRangeTint, tiles);
+                        return new List<Tuple<Color, bool[,]>>(1) { new (theMod.config.SprinklerRangeTint, tiles) };
                     } else if (fallbackToDefault) {
-                        return theMod.GetDefaultSprinklerHighlight(item, itemID, itemName);
+                        var x = theMod.GetDefaultSprinklerHighlight(item, itemID, itemName);
+                        if (x is null) return null;
+                        return new List<Tuple<Color, bool[,]>>(1) { x };
                     } else {
                         return null;
                     }

@@ -6,6 +6,7 @@
 ### User-visible Changes
 
 * Configuration via GMCM can now be done in-game (not just from the title menu)
+* Add configuration option for refresh interval
 
 ### API Changes
 

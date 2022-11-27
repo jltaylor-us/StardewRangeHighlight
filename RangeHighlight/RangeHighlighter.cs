@@ -166,7 +166,7 @@ namespace RangeHighlight {
         }
 
         private void OnUpdateTicked(object? sender, UpdateTickedEventArgs e) {
-            if (!e.IsMultipleOf(6)) return; // only do this once every 0.1s or so
+            if (!e.IsMultipleOf(theMod.config.RefreshInterval)) return;
 
             if (highlightTilesMutex.Value.WaitOne()) {
                 try {

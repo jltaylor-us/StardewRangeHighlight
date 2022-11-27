@@ -9,6 +9,11 @@ namespace RangeHighlight {
         Never, WhenMouseHidden, Always
     }
     internal class ModConfig {
+        private uint _refreshInterval = 6; // once every 0.1s or so
+        public uint RefreshInterval {
+            get => _refreshInterval;
+            set => _refreshInterval = Math.Clamp(value, 1, 60);
+        }
         public bool ShowJunimoRange { get; set; } = true;
         public bool ShowSprinklerRange { get; set; } = true;
         public bool ShowScarecrowRange { get; set; } = true;
@@ -57,6 +62,15 @@ namespace RangeHighlight {
                 gmcm.AddParagraph(mod, I18n.Config_InstallGmcmOptions);
             }
 
+            gmcm.AddNumberOption(
+                mod: mod,
+                name: I18n.Config_RefreshInterval,
+                tooltip: I18n.Config_RefreshInterval_Tooltip,
+                getValue: () => (int)theMod.config.RefreshInterval,
+                setValue: (v) => theMod.config.RefreshInterval = (uint)v,
+                min: 1,
+                max: 60
+                );
             gmcm.AddBoolOption(
                 mod: mod,
                 name: I18n.Config_HotkeysToggle,
@@ -258,6 +272,7 @@ namespace RangeHighlight {
         void AddBoolOption(IManifest mod, Func<bool> getValue, Action<bool> setValue, Func<string> name, Func<string>? tooltip = null, string? fieldId = null);
         void AddKeybindList(IManifest mod, Func<KeybindList> getValue, Action<KeybindList> setValue, Func<string> name, Func<string>? tooltip = null, string? fieldId = null);
         void AddTextOption(IManifest mod, Func<string> getValue, Action<string> setValue, Func<string> name, Func<string>? tooltip = null, string[]? allowedValues = null, Func<string, string>? formatAllowedValue = null, string? fieldId = null);
+        void AddNumberOption(IManifest mod, Func<int> getValue, Action<int> setValue, Func<string> name, Func<string>? tooltip = null, int? min = null, int? max = null, int? interval = null, Func<int, string>? formatValue = null, string? fieldId = null);
     }
     // See https://github.com/jltaylor-us/StardewGMCMOptions/blob/default/StardewGMCMOptions/IGMCMOptionsAPI.cs
     public interface GMCMOptionsAPI {

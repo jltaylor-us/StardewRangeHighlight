@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Xml;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -64,11 +65,30 @@ namespace RangeHighlight {
         private void OnSaveLoaded(object? sender, SaveLoadedEventArgs e) {
             installDefaultHighlights();
             integrations = new Integrations(this);
+            Helper.Events.GameLoop.UpdateTicked += UIInfoSuiteWarning;
         }
 
         private void OnReturnedToTitle(object? sender, ReturnedToTitleEventArgs e) {
             integrations = null;
             highlighter?.ClearAllHighlighters();
+        }
+
+        private void UIInfoSuiteWarning(object? sender, EventArgs e) {
+            Helper.Events.GameLoop.UpdateTicked -= UIInfoSuiteWarning;
+            if (!config.ShowBeehouseRange && !config.ShowJunimoRange && !config.ShowScarecrowRange && !config.ShowSprinklerRange) {
+                return;
+            }
+            if (this.Helper.ModRegistry.Get("Annosz.UiInfoSuite2") is IModInfo info) {
+                var bindingFlags = System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic
+                    | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Static;
+                IMod? mod = info.GetType().GetProperty("Mod", bindingFlags)?.GetValue(info) as IMod;
+                object? opts = mod?.GetType().GetField("_modOptions", bindingFlags)?.GetValue(mod);
+                bool? showRangesEnabled = opts?.GetType().GetProperty("ShowItemEffectRanges", bindingFlags)?.GetValue(opts) as bool?;
+                if (showRangesEnabled is true) {
+                    Monitor.Log($"Both {ModManifest.Name} and {info.Manifest.Name} are configured to show item effect ranges.  You probably don't want that.", LogLevel.Warn);
+                }
+
+            }
         }
 
 

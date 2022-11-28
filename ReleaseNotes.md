@@ -7,6 +7,8 @@
 
 * Configuration via GMCM can now be done in-game (not just from the title menu)
 * Add configuration option for refresh interval
+* Add a warning in the SMAPI log when a save is loaded and both Range Highlight
+  and UI Info Suite 2 are configured to show ranges.
 
 ### API Changes
 

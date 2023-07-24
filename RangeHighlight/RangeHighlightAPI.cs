@@ -57,11 +57,6 @@ namespace RangeHighlight {
             return result;
         }
 
-        [Obsolete("GetCartesianCircle is deprecated.  Use GetCartesianCircleWithTruncate instead.")]
-        public bool[,] GetCartesianCircle(uint radius, bool excludeCenter = true) {
-            return GetCartesianCircleWithTruncate(radius, excludeCenter);
-        }
-
         public bool[,] GetCartesianCircleWithTruncate(uint radius, bool excludeCenter = true) {
             int r = (int)radius;
             return GetCircle(r, excludeCenter, (i, j) =>
@@ -118,30 +113,6 @@ namespace RangeHighlight {
             rangeHighlighter.AddBuildingHighlighter(uniqueId, isEnabled, hotkey, wrappedBpHighlighter, wrappedBuildingHighlighter);
         }
 
-        [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        public void AddBuildingRangeHighlighter(string uniqueId, KeybindList hotkey, Func<Building, Tuple<Color, bool[,], int, int>?> highlighter) {
-            AddBuildingRangeHighlighter(uniqueId, () => true, () => hotkey, null, highlighter);
-        }
-
-        [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void IRangeHighlightAPI.AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey, Func<Building, Tuple<Color, bool[,], int, int>?> highlighter) {
-            AddBuildingRangeHighlighter(uniqueId, KeybindList.ForSingle(hotkey ?? SButton.None), highlighter);
-        }
-
-        [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        public void AddBuildingRangeHighlighter(string uniqueId, KeybindList hotkey,
-                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
-                Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter) {
-            AddBuildingRangeHighlighter(uniqueId, () => true, () => hotkey, blueprintHighlighter, buildingHighlighter);
-        }
-
-        [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void IRangeHighlightAPI.AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey,
-                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
-                Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter) {
-            AddBuildingRangeHighlighter(uniqueId, KeybindList.ForSingle(hotkey ?? SButton.None), blueprintHighlighter, buildingHighlighter);
-        }
-
         // ----- Item Highlighters ----
 
         public void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld, Action? onRangeCalculationStart, Func<Item, int, string, List<Tuple<Color, bool[,]>>?> highlighter, Action? onRangeCalculationFinish) {
@@ -158,42 +129,6 @@ namespace RangeHighlight {
             AddItemRangeHighlighter(uniqueId, isEnabled, hotkey, highlightOthersWhenHeld, null, wrappedHighlighter, null);
         }
 
-
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void IRangeHighlightAPI.AddItemRangeHighlighter(string uniqueId, SButton? hotkey, Func<string, Tuple<Color, bool[,]>?> highlighter) {
-            AddItemRangeHighlighter(uniqueId, KeybindList.ForSingle(hotkey ?? SButton.None), true, (Item item, int itemID, string lowerName) => { return highlighter(lowerName); });
-        }
-
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void IRangeHighlightAPI.AddItemRangeHighlighter(string uniqueId, SButton? hotkey, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter) {
-            AddItemRangeHighlighter(uniqueId, KeybindList.ForSingle(hotkey ?? SButton.None), true, highlighter);
-        }
-
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        public void AddItemRangeHighlighter(string uniqueId, KeybindList hotkey, bool highlightOthersWhenHeld, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter) {
-            AddItemRangeHighlighter(uniqueId, () => true, () => hotkey, () => highlightOthersWhenHeld, highlighter);
-        }
-
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void IRangeHighlightAPI.AddItemRangeHighlighter(string uniqueId, SButton? hotkey, bool highlightOthersWhenHeld, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter) {
-            AddItemRangeHighlighter(uniqueId, KeybindList.ForSingle(hotkey ?? SButton.None), highlightOthersWhenHeld, highlighter);
-        }
-
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        public void AddItemRangeHighlighter(string uniqueId, KeybindList hotkey, bool highlightOthersWhenHeld, Action? onRangeCalculationStart, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter, Action? onRangeCalculationFinish) {
-            Func<Item, int, string, List<Tuple<Color, bool[,]>>?> wrappedHighlighter =
-                (Item i, int idx, string name) => {
-                    var orig = highlighter(i, idx, name);
-                    if (orig is null) return null;
-                    return new List<Tuple<Color, bool[,]>>(1) { orig };
-                };
-            rangeHighlighter.AddItemHighlighter(uniqueId, () => true, () => hotkey, () => highlightOthersWhenHeld, wrappedHighlighter, onRangeCalculationStart, onRangeCalculationFinish);
-        }
-
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void IRangeHighlightAPI.AddItemRangeHighlighter(string uniqueId, SButton? hotkey, bool highlightOthersWhenHeld, Action? onRangeCalculationStart, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter, Action? onRangeCalculationFinish) {
-            AddItemRangeHighlighter(uniqueId, KeybindList.ForSingle(hotkey ?? SButton.None), highlightOthersWhenHeld, onRangeCalculationStart, highlighter, onRangeCalculationFinish);
-        }
 
         public void RemoveBuildingRangeHighlighter(string uniqueId) {
             rangeHighlighter.RemoveBuildingHighlighter(uniqueId);

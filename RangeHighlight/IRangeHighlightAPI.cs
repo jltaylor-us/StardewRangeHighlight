@@ -56,14 +56,6 @@ namespace RangeHighlight {
         // -----------------------------------------------
 
         /// <summary>
-        ///   An deprecated alias for <c>GetCartesianCircleWithTruncate</c>.
-        /// </summary>
-        /// <param name="radius">The circle radius</param>
-        /// <param name="excludeCenter">whether the center tile should be excluded</param>
-        [Obsolete("GetCartesianCircle is deprecated.  Use GetCartesianCircleWithTruncate instead.")]
-        bool[,] GetCartesianCircle(uint radius, bool excludeCenter = true);
-
-        /// <summary>
         ///   Return a circle shape (i.e., the shape of a scarecrow's range),
         ///   where a tile's distance from the center is truncated to an integer
         ///   before comparing against the radius
@@ -117,14 +109,6 @@ namespace RangeHighlight {
 
         // ----- Building Highlighters ----
 
-        /// <summary>Add a highlighter for buildings.</summary>
-        [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddBuildingRangeHighlighter(string uniqueId, KeybindList hotkey, Func<Building, Tuple<Color, bool[,], int, int>?> highlighter);
-
-        /// <summary>Add a highlighter for buildings.</summary>
-        [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey, Func<Building, Tuple<Color, bool[,], int, int>?> highlighter);
-
         /// <summary>Add a highlighter for buildings that also allows for highlighting during placement.</summary>
         /// <param name="uniqueId">
         ///   An ID by which the highlighter can be removed later.
@@ -138,7 +122,7 @@ namespace RangeHighlight {
         ///   (A hotkey means to also apply the highlighter when that key is held.)
         /// </param>
         /// <param name="blueprintHighlighter">
-        ///   A function that evaluates whether the <c>BluePrint</c> (for a building
+        ///   A function that evaluates whether the <c>BlueprintEntry</c> (for a building
         ///   currently being placed) matches
         ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
         ///   color, highlight shape, and x and y offset for the building "center".
@@ -174,7 +158,7 @@ namespace RangeHighlight {
         ///   (A hotkey means to also apply the highlighter when that key is held.)
         /// </param>
         /// <param name="blueprintHighlighter">
-        ///   A function that evaluates whether the <c>BluePrint</c> (for a building
+        ///   A function that evaluates whether the <c>BlueprintEntry</c> (for a building
         ///   currently being placed) matches
         ///   this highlighter, and if so returns a <c>List</c> of <c>Tuple</c>s,
         ///   each containing the tint
@@ -201,31 +185,12 @@ namespace RangeHighlight {
                 Func<CarpenterMenu.BlueprintEntry, List<Tuple<Color, bool[,], int, int>>?>? blueprintHighlighter,
                 Func<Building, List<Tuple<Color, bool[,], int, int>>?> buildingHighlighter);
 
-        [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddBuildingRangeHighlighter(string uniqueId, KeybindList hotkey,
-                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
-                Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter);
-
-        /// <summary>Add a highlighter for buildings that also allows for highlighting during placement.</summary>
-        [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey,
-                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
-                Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter);
-
         /// <summary>
         ///   Remove any building range highlighters added with the given <c>uniqueId</c>
         /// </summary>
         void RemoveBuildingRangeHighlighter(string uniqueId);
 
         // ----- Item Highlighters ----
-
-        /// <summary>Add a highlighter for items.</summary>
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddItemRangeHighlighter(string uniqueId, SButton? hotkey, Func<string, Tuple<Color, bool[,]>?> highlighter);
-
-        /// <summary>Add a highlighter for items.</summary>
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddItemRangeHighlighter(string uniqueId, SButton? hotkey, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter);
 
         /// <summary>Add a highlighter for items.</summary>
         /// <param name="uniqueId">
@@ -255,14 +220,6 @@ namespace RangeHighlight {
         ///   as a match so that no other highlighters will be processed for the item.)
         /// </param>
         void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter);
-
-        /// <summary>Add a highlighter for items.</summary>
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddItemRangeHighlighter(string uniqueId, KeybindList hotkey, bool highlightOthersWhenHeld, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter);
-
-        /// <summary>Add a highlighter for items.</summary>
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddItemRangeHighlighter(string uniqueId, SButton? hotkey, bool highlightOthersWhenHeld, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter);
 
         /// <summary>
         ///   Add a highlighter for items, with callbacks to bracket the round of range highlight calculation.
@@ -309,14 +266,6 @@ namespace RangeHighlight {
         ///   function was called.
         /// </param>
         void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld, Action? onRangeCalculationStart, Func<Item, int, string, List<Tuple<Color, bool[,]>>?> highlighter, Action? onRangeCalculationFinish);
-
-        /// <summary>Add a highlighter for items with bracketing callbacks.</summary>
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddItemRangeHighlighter(string uniqueId, KeybindList hotkey, bool highlightOthersWhenHeld, Action? onRangeCalculationStart, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter, Action? onRangeCalculationFinish);
-
-        /// <summary>Add a highlighter for items with bracketing callbacks.</summary>
-        [Obsolete("This AddItemRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
-        void AddItemRangeHighlighter(string uniqueId, SButton? hotkey, bool highlightOthersWhenHeld, Action? onRangeCalculationStart, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter, Action? onRangeCalculationFinish);
 
         /// <summary>
         ///   Remove any item range highlighters added with the given <c>uniqueId</c>

@@ -1,4 +1,4 @@
-﻿// Copyright 2020-2022 Jamie Taylor
+﻿// Copyright 2020-2023 Jamie Taylor
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -6,6 +6,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Buildings;
+using StardewValley.Menus;
 
 namespace RangeHighlight {
     public class RangeHighlightAPI : IRangeHighlightAPI {
@@ -97,19 +98,19 @@ namespace RangeHighlight {
 
         // ----- Building Highlighters ----
 
-        public void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<BluePrint, List<Tuple<Color, bool[,], int, int>>?>? blueprintHighlighter, Func<Building, List<Tuple<Color, bool[,], int, int>>?> buildingHighlighter) {
+        public void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<CarpenterMenu.BlueprintEntry, List<Tuple<Color, bool[,], int, int>>?>? blueprintHighlighter, Func<Building, List<Tuple<Color, bool[,], int, int>>?> buildingHighlighter) {
             rangeHighlighter.AddBuildingHighlighter(uniqueId, isEnabled, hotkey, blueprintHighlighter, buildingHighlighter);
         }
 
-        public void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<BluePrint, Tuple<Color, bool[,], int, int>?>? blueprintHighlighter, Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter) {
+        public void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?>? blueprintHighlighter, Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter) {
             Func<Building, List<Tuple<Color, bool[,], int, int>>?> wrappedBuildingHighlighter =
                 (Building b) => {
                     var orig = buildingHighlighter(b);
                     if (orig is null) return null;
                     return new List<Tuple<Color, bool[,], int, int>>(1) { orig };
                 };
-            Func<BluePrint, List<Tuple<Color, bool[,], int, int>>?>? wrappedBpHighlighter =
-                blueprintHighlighter is null ? null : (BluePrint bp) => {
+            Func<CarpenterMenu.BlueprintEntry, List<Tuple<Color, bool[,], int, int>>?>? wrappedBpHighlighter =
+                blueprintHighlighter is null ? null : (CarpenterMenu.BlueprintEntry bp) => {
                     var orig = blueprintHighlighter(bp);
                     if (orig is null) return null;
                     return new List<Tuple<Color, bool[,], int, int>>(1) { orig };
@@ -129,14 +130,14 @@ namespace RangeHighlight {
 
         [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
         public void AddBuildingRangeHighlighter(string uniqueId, KeybindList hotkey,
-                Func<BluePrint, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
+                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
                 Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter) {
             AddBuildingRangeHighlighter(uniqueId, () => true, () => hotkey, blueprintHighlighter, buildingHighlighter);
         }
 
         [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
         void IRangeHighlightAPI.AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey,
-                Func<BluePrint, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
+                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
                 Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter) {
             AddBuildingRangeHighlighter(uniqueId, KeybindList.ForSingle(hotkey ?? SButton.None), blueprintHighlighter, buildingHighlighter);
         }

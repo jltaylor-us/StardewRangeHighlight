@@ -1,4 +1,4 @@
-﻿// Copyright 2020-2022 Jamie Taylor
+﻿// Copyright 2020-2023 Jamie Taylor
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -13,7 +13,7 @@ using StardewValley.Locations;
 using StardewValley.Menus;
 
 namespace RangeHighlight {
-    using BlueprintHighlightFunction = Func<BluePrint, List<Tuple<Color, bool[,], int, int>>?>;
+    using BlueprintHighlightFunction = Func<CarpenterMenu.BlueprintEntry, List<Tuple<Color, bool[,], int, int>>?>;
     using BuildingHighlightFunction = Func<Building, List<Tuple<Color, bool[,], int, int>>?>;
     using ItemHighlightFunction = Func<Item, int, string, List<Tuple<Color, bool[,]>>?>;
     using TASHighlightFunction = Func<TemporaryAnimatedSprite, List<Tuple<Color, bool[,]>>?>;
@@ -192,10 +192,10 @@ namespace RangeHighlight {
             bool iterateItems = false;
 
             if (Game1.activeClickableMenu != null) {
-                if (Game1.activeClickableMenu is CarpenterMenu carpenterMenu && Game1.currentLocation is BuildableGameLocation) {
+                if (Game1.activeClickableMenu is CarpenterMenu carpenterMenu && Game1.currentLocation.IsBuildableLocation()) {
                     for (int i = 0; i < buildingHighlighters.Count; ++i) {
                         if (buildingHighlighters[i].Item2 is var highlighter && highlighter is not null) {
-                            var rets = highlighter(carpenterMenu.CurrentBlueprint);
+                            var rets = highlighter(carpenterMenu.Blueprint);
                             if (rets is not null) foreach(var ret in rets){
                                 var cursorTile = GetCursorTile();
                                 AddHighlightTiles(ret.Item1, ret.Item2, (int)cursorTile.X + ret.Item3, (int)cursorTile.Y + ret.Item4);
@@ -210,9 +210,9 @@ namespace RangeHighlight {
                 }
             }
 
-            if (Game1.currentLocation is BuildableGameLocation buildableLocation && config.HighlightBuildingsOnMouseover) {
+            if (Game1.currentLocation.IsBuildableLocation() && config.HighlightBuildingsOnMouseover) {
                 // check to see if the cursor is over a building
-                Building building = buildableLocation.getBuildingAt(Game1.currentCursorTile);
+                Building building = Game1.currentLocation.getBuildingAt(Game1.currentCursorTile);
                 if (building != null) {
                     for (int i = 0; i < buildingHighlighters.Count; ++i) {
                         var ret = buildingHighlighters[i].Item1.highlighter(building);
@@ -299,8 +299,8 @@ namespace RangeHighlight {
             }
 
             if (iterateBuildings) {
-                if (Game1.currentLocation is BuildableGameLocation bl) {
-                    foreach (Building building in bl.buildings) {
+                if (Game1.currentLocation.IsBuildableLocation()) {
+                    foreach (Building building in Game1.currentLocation.buildings) {
                         for (int i = 0; i < buildingHighlighters.Count; ++i) {
                             var rets = buildingHighlighters[i].Item1.highlighter(building);
                             if (rets != null) foreach(var ret in rets) {

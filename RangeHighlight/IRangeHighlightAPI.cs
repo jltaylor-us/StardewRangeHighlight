@@ -1,4 +1,4 @@
-﻿// Copyright 2020-2022 Jamie Taylor
+﻿// Copyright 2020-2023 Jamie Taylor
 //
 // To facilitate other mods which would like to use the RangeHighlight API,
 // the license for this file (and only this file) is modified by removing the
@@ -8,7 +8,7 @@
 // In other words, anyone may copy this file into their own mod.
 //
 
-//  Copyright(c) 2020-2022, Jamie Taylor
+//  Copyright(c) 2020-2023, Jamie Taylor
 //All rights reserved.
 //
 //Redistribution and use in source and binary forms, with or without
@@ -41,6 +41,7 @@ using StardewModdingAPI;
 using StardewModdingAPI.Utilities;
 using StardewValley;
 using StardewValley.Buildings;
+using StardewValley.Menus;
 
 namespace RangeHighlight {
     /// <summary>
@@ -157,7 +158,7 @@ namespace RangeHighlight {
         ///   as a match so that no other highlighters will be processed for the building.)
         /// </param>
         void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey,
-                Func<BluePrint, Tuple<Color, bool[,], int, int>?>? blueprintHighlighter,
+                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?>? blueprintHighlighter,
                 Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter);
 
         /// <summary>Add a highlighter for buildings that also allows for highlighting during placement.</summary>
@@ -197,18 +198,18 @@ namespace RangeHighlight {
         ///   as a match so that no other highlighters will be processed for the building.)
         /// </param>
         void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey,
-                Func<BluePrint, List<Tuple<Color, bool[,], int, int>>?>? blueprintHighlighter,
+                Func<CarpenterMenu.BlueprintEntry, List<Tuple<Color, bool[,], int, int>>?>? blueprintHighlighter,
                 Func<Building, List<Tuple<Color, bool[,], int, int>>?> buildingHighlighter);
 
         [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
         void AddBuildingRangeHighlighter(string uniqueId, KeybindList hotkey,
-                Func<BluePrint, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
+                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
                 Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter);
 
         /// <summary>Add a highlighter for buildings that also allows for highlighting during placement.</summary>
         [Obsolete("This AddBuildingRangeHighlighter signature is deprecated.  Use the non-deprecated one instead.")]
         void AddBuildingRangeHighlighter(string uniqueId, SButton? hotkey,
-                Func<BluePrint, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
+                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?> blueprintHighlighter,
                 Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter);
 
         /// <summary>

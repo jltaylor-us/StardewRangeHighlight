@@ -1,4 +1,4 @@
-﻿// Copyright 2020-2022 Jamie Taylor
+﻿// Copyright 2020-2023 Jamie Taylor
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -198,7 +198,7 @@ namespace RangeHighlight {
                 () => config.ShowJunimoRange,
                 () => config.ShowJunimoRangeKey,
                 blueprint => {
-                    if (blueprint.name == "Junimo Hut") {
+                    if (blueprint.Id == "Junimo Hut") {
                         return new Tuple<Color, bool[,], int, int>(config.JunimoRangeTint, defaultShapes.junimoHut, 1, 1);
                     } else {
                         return null;
@@ -252,7 +252,7 @@ namespace RangeHighlight {
                 () => true,
                 null,
                 (item, itemID, itemName) => {
-                    if (!Utility.IsNormalObjectAtParentSheetIndex(item, item.ParentSheetIndex)) return null;
+                    if (!Utility.IsNormalObjectAtParentSheetIndex(item, item.ItemId)) return null;
                     return bombHelper(itemID, 0);
                 },
                 null);

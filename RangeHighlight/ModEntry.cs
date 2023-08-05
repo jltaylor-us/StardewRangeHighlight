@@ -94,6 +94,7 @@ namespace RangeHighlight {
 
         internal class DefaultShapes {
             private readonly IRangeHighlightAPI api;
+            public uint junimoHutDefaultRange;
             public readonly bool[,] sprinkler = {
                 { false, true, false},
                 { true, false, true },
@@ -159,9 +160,15 @@ namespace RangeHighlight {
 
             [MemberNotNull(nameof(junimoHut))]
             public void SetJunimoRange(uint r) {
-                junimoHut = api.GetSquareCircle(r);
-                junimoHut[r - 1, r - 1] = junimoHut[r, r - 1] = junimoHut[r + 1, r - 1] = false;
-                junimoHut[r - 1, r] = junimoHut[r + 1, r] = false;
+                junimoHut = MakeJunimoShape(r);
+                junimoHutDefaultRange = r;
+            }
+
+            public bool[,] MakeJunimoShape(uint r) {
+                bool[,] result = api.GetSquareCircle(r);
+                result[r - 1, r - 1] = result[r, r - 1] = result[r + 1, r - 1] = false;
+                result[r - 1, r] = result[r + 1, r] = false;
+                return result;
             }
 
             public bool[,] GetSprinkler(string name, bool hasPressureNozzleAttached) {
@@ -205,7 +212,9 @@ namespace RangeHighlight {
                     }
                 },
                 building => {
-                    if (building is JunimoHut) {
+                    if (building is JunimoHut junimoHut) {
+                        // junimoHut.cropHarvestRadius can be set per-building in SDV 1.6.
+                        bool[,] shape = junimoHut.cropHarvestRadius == defaultShapes.junimoHutDefaultRange ? defaultShapes.junimoHut : defaultShapes.MakeJunimoShape((uint)junimoHut.cropHarvestRadius);
                         return new Tuple<Color, bool[,], int, int>(config.JunimoRangeTint, defaultShapes.junimoHut, 1, 1);
                     } else {
                         return null;

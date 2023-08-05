@@ -5,7 +5,13 @@
 // notice requirements for binary distribution.  The license (as amended)
 // is included below, making this file self-contained.
 //
-// In other words, anyone may copy this file into their own mod.
+// In other words, anyone may copy this file into their own mod (and edit
+// it if they want, e.g. to remove the methods they are not using, so long
+// as the license comment is retained).  (If all you want in your mod is
+// _just_ the function declarations and not any comments or other creative
+// expression that may be in the file, then that is permissible fair use
+// as a matter of law in the US according to Google v. Oracle, 593 U.S. ___ (2021),
+// and does not require any license.)
 //
 
 //  Copyright(c) 2020-2023, Jamie Taylor

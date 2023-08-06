@@ -46,7 +46,7 @@ and not yet exploded shows its ranges (unless disabled in configuration).
 
 ### Compatibility
 
-* Works with Stardew Valley 1.5 on Linux/Mac/Windows.  Works on Android in the release corresponding to the Stardew Valley version on Android.
+* Works with Stardew Valley 1.6 on Linux/Mac/Windows.  _Might_ work on Android in the release corresponding to the Stardew Valley version on Android.
 * Works in single player and multiplayer.
 * No known incompatibilities, but if you have another mod that also shows ranges (such as UI Info Suite) then each mod will apply its own highlighting. The result is not horrible, but you probably want to disable the range highlighting in the other mod if possible.  (You can do this from the in-game menu in UI Info Suite.)
 * If Prismatic Tools is installed then the range of the prismatic sprinkler will be the value read from its config.

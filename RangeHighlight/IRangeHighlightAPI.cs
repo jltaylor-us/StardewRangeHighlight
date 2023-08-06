@@ -148,9 +148,7 @@ namespace RangeHighlight {
         ///   (e.g., as constructed by
         ///   <c cref="BuildingHighlighterResult(Color, bool[,], int, int)">BuildingHighlighterResult</c>).
         ///   If the building does not match then
-        ///   the function should return <c>null</c>.  (Note that returning an
-        ///   empty <c>bool[,]</c> will result in no highlighting, but counts
-        ///   as a match so that no other highlighters will be processed for the blueprint.)
+        ///   the function should return <c>null</c>.
         ///   Pass <c>null</c> here if there is no range to show while placing this building type.
         /// </param>
         /// <param name="buildingHighlighter">
@@ -160,9 +158,7 @@ namespace RangeHighlight {
         ///   (e.g., as constructed by
         ///   <c cref="BuildingHighlighterResult(Color, bool[,], int, int)">BuildingHighlighterResult</c>).
         ///   If the building does not match then
-        ///   the function should return <c>null</c>.  (Note that returning an
-        ///   empty <c>bool[,]</c> will result in no highlighting, but counts
-        ///   as a match so that no other highlighters will be processed for the building.)
+        ///   the function should return <c>null</c>.
         /// </param>
         void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey,
                 Func<CarpenterMenu.BlueprintEntry, BuildingHighlighterResult?>? blueprintHighlighter,
@@ -189,10 +185,7 @@ namespace RangeHighlight {
         ///   (e.g., as constructed by
         ///   <c cref="BuildingHighlighterResult(Color, bool[,], int, int)">BuildingHighlighterResult</c>).
         ///   If the building does not match then
-        ///   the function should return <c>null</c>.  (Note that returning an
-        ///   empty <c>List</c> or a <c>List</c> containing only empty <c>bool[,]</c>s
-        ///   will result in no highlighting, but counts
-        ///   as a match so that no other highlighters will be processed for the blueprint.)
+        ///   the function should return <c>null</c>.
         ///   Pass <c>null</c> here if there is no range to show while placing this building type.
         /// </param>
         /// <param name="buildingHighlighter">
@@ -203,10 +196,7 @@ namespace RangeHighlight {
         ///   (e.g., as constructed by
         ///   <c cref="BuildingHighlighterResult(Color, bool[,], int, int)">BuildingHighlighterResult</c>).
         ///   If the building does not match then
-        ///   the function should return <c>null</c>.  (Note that returning an
-        ///   empty <c>List</c> or a <c>List</c> containing only empty <c>bool[,]</c>s
-        ///   will result in no highlighting, but counts
-        ///   as a match so that no other highlighters will be processed for the building.)
+        ///   the function should return <c>null</c>.
         /// </param>
         void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey,
                 Func<CarpenterMenu.BlueprintEntry, List<BuildingHighlighterResult>?>? blueprintHighlighter,
@@ -250,9 +240,7 @@ namespace RangeHighlight {
         ///   The function parameters are the <c>Item</c>
         ///   object, its item ID ("parent sheet index"), and the lower-cased item name.
         ///   If the item does not match then
-        ///   the function should return <c>null</c>.  (Note that returning an
-        ///   empty <c>bool[,]</c> will result in no highlighting, but counts
-        ///   as a match so that no other highlighters will be processed for the item.)
+        ///   the function should return <c>null</c>.
         /// </param>
         void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld,
                 Func<Item, int, string, ItemHighlighterResult?> highlighter);
@@ -293,10 +281,7 @@ namespace RangeHighlight {
         ///   The function parameters are the <c>Item</c>
         ///   object, its item ID ("parent sheet index"), and the lower-cased item name.
         ///   If the item does not match then
-        ///   the function should return <c>null</c>.  (Note that returning an
-        ///   empty <c>List</c> or a <c>List</c> containing only empty <c>bool[,]</c>s
-        ///   will result in no highlighting, but counts
-        ///   as a match so that no other highlighters will be processed for the item.)
+        ///   the function should return <c>null</c>.
         /// </param>
         /// <param name="onRangeCalculationFinish">
         ///   Called after the last time the highlighter function is called in a "batch" of highlight
@@ -333,9 +318,7 @@ namespace RangeHighlight {
         ///   color and highlight shape (e.g., as constructed by
         ///   <c cref="TASHighlighterResult(Color, bool[,])">TASHighlighterResult</c>).
         ///   If the temporary animated sprite does not match then
-        ///   the function should return <c>null</c>.  (Note that returning an
-        ///   empty <c>bool[,]</c> will result in no highlighting, but counts
-        ///   as a match so that no other highlighters will be processed for the temporary animated sprite.)
+        ///   the function should return <c>null</c>.
         /// </param>
         void AddTemporaryAnimatedSpriteHighlighter(string uniqueId, Func<bool> isEnabled,
                 Func<TemporaryAnimatedSprite, TASHighlighterResult?> highlighter);
@@ -354,10 +337,7 @@ namespace RangeHighlight {
         ///   containing a tint color and highlight shape (e.g., as constructed by
         ///   <c cref="TASHighlighterResult(Color, bool[,])">TASHighlighterResult</c>).
         ///   If the temporary animated sprite does not match then
-        ///   the function should return <c>null</c>.  (Note that returning an
-        ///   empty <c>List</c>, or a <c>List</c> containing only empty <c>bool[,]</c>s
-        ///   will result in no highlighting, but counts
-        ///   as a match so that no other highlighters will be processed for the temporary animated sprite.)
+        ///   the function should return <c>null</c>.
         /// </param>
         void AddTemporaryAnimatedSpriteHighlighter(string uniqueId, Func<bool> isEnabled,
                 Func<TemporaryAnimatedSprite, List<TASHighlighterResult>?> highlighter);

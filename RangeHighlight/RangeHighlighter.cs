@@ -201,7 +201,7 @@ namespace RangeHighlight {
                                 AddHighlightTiles(ret.Item1, ret.Item2, (int)cursorTile.X + ret.Item3, (int)cursorTile.Y + ret.Item4);
                                 runBuildingHighlighter[i] = true;
                                 iterateBuildings = true;
-                                break;
+                                //break;
                             }
                         }
                     }
@@ -258,7 +258,7 @@ namespace RangeHighlight {
                             && !mouseHidden) {
                             AddHighlightTiles(ret, (int)cursorTile.X, (int)cursorTile.Y);
                         }
-                        break;
+                        //break;
                     }
                 }
             }
@@ -305,7 +305,7 @@ namespace RangeHighlight {
                             var rets = buildingHighlighters[i].Item1.highlighter(building);
                             if (rets != null) foreach(var ret in rets) {
                                 AddHighlightTiles(ret.Item1, ret.Item2, building.tileX.Value + ret.Item3, building.tileY.Value + ret.Item4);
-                                break;
+                                //break;
                             }
                         }
                     }
@@ -325,7 +325,7 @@ namespace RangeHighlight {
                             var ret = itemHighlighters[i].highlighter(item, itemID, itemName);
                             if (ret != null) {
                                 AddHighlightTiles(ret, (int)item.TileLocation.X, (int)item.TileLocation.Y);
-                                break;
+                                //break;
                             }
                         }
                     }
@@ -339,7 +339,7 @@ namespace RangeHighlight {
                         if (ret != null) {
                             AddHighlightTiles(ret,
                                 (int)(sprite.position.X / Game1.tileSize), (int)(sprite.position.Y / Game1.tileSize));
-                            break;
+                            //break;
                         }
                     }
                 }

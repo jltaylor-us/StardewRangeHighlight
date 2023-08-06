@@ -1,6 +1,17 @@
 
 # Release Notes
 
+## Version 4.0.0
+
+Updated for Stardew Valley 1.6 and SMAPI 4.0.
+
+### User-visible Changes
+
+### API Changes
+
+* Removed deprecated APIs
+* A match from one highlighter no longer stops matching on other highlighters.
+
 ## Version 3.6.0
 
 ### User-visible Changes

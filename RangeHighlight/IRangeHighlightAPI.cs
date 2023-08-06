@@ -50,6 +50,11 @@ using StardewValley.Buildings;
 using StardewValley.Menus;
 
 namespace RangeHighlight {
+    // aliases for the highlighter return types
+    using BuildingHighlighterResult = Tuple<Color, bool[,], int, int>;
+    using ItemHighlighterResult = Tuple<Color, bool[,]>;
+    using TASHighlighterResult = Tuple<Color, bool[,]>;
+
     /// <summary>
     /// Interface to the Range Highlight mod functionality.  Add new highlighters with the Add*Highlighter methods.
     /// All highlighters are cleared when returning to the title screen, so the `SaveLoaded` game event is a
@@ -115,6 +120,14 @@ namespace RangeHighlight {
 
         // ----- Building Highlighters ----
 
+        /// <summary>Construct the tuple that is the return type of the building highlighter.</summary>
+        /// <param name="tint">The color to use for this highlight</param>
+        /// <param name="shape">The shape of this highlight</param>
+        /// <param name="centerOffsetX">The X offset of this building's "center" in the shape</param>
+        /// <param name="centerOffsetY">The Y offset of this building's "center" in the shape</param>
+        /// <returns>A tuple of the arguments</returns>
+        BuildingHighlighterResult BuildingHighlighterResult(Color tint, bool[,] shape, int centerOffsetX, int centerOffsetY);
+
         /// <summary>Add a highlighter for buildings that also allows for highlighting during placement.</summary>
         /// <param name="uniqueId">
         ///   An ID by which the highlighter can be removed later.
@@ -131,7 +144,9 @@ namespace RangeHighlight {
         ///   A function that evaluates whether the <c>BlueprintEntry</c> (for a building
         ///   currently being placed) matches
         ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
-        ///   color, highlight shape, and x and y offset for the building "center".
+        ///   color, highlight shape, and x and y offset for the building "center"
+        ///   (e.g., as constructed by
+        ///   <c cref="BuildingHighlighterResult(Color, bool[,], int, int)">BuildingHighlighterResult</c>).
         ///   If the building does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>bool[,]</c> will result in no highlighting, but counts
@@ -141,15 +156,17 @@ namespace RangeHighlight {
         /// <param name="buildingHighlighter">
         ///   A function that evaluates whether the <c>Building</c> matches
         ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
-        ///   color, highlight shape, and x and y offset for the building "center".
+        ///   color, highlight shape, and x and y offset for the building "center"
+        ///   (e.g., as constructed by
+        ///   <c cref="BuildingHighlighterResult(Color, bool[,], int, int)">BuildingHighlighterResult</c>).
         ///   If the building does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>bool[,]</c> will result in no highlighting, but counts
         ///   as a match so that no other highlighters will be processed for the building.)
         /// </param>
         void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey,
-                Func<CarpenterMenu.BlueprintEntry, Tuple<Color, bool[,], int, int>?>? blueprintHighlighter,
-                Func<Building, Tuple<Color, bool[,], int, int>?> buildingHighlighter);
+                Func<CarpenterMenu.BlueprintEntry, BuildingHighlighterResult?>? blueprintHighlighter,
+                Func<Building, BuildingHighlighterResult?> buildingHighlighter);
 
         /// <summary>Add a highlighter for buildings that also allows for highlighting during placement.</summary>
         /// <param name="uniqueId">
@@ -168,7 +185,9 @@ namespace RangeHighlight {
         ///   currently being placed) matches
         ///   this highlighter, and if so returns a <c>List</c> of <c>Tuple</c>s,
         ///   each containing the tint
-        ///   color, highlight shape, and x and y offset for the building "center".
+        ///   color, highlight shape, and x and y offset for the building "center"
+        ///   (e.g., as constructed by
+        ///   <c cref="BuildingHighlighterResult(Color, bool[,], int, int)">BuildingHighlighterResult</c>).
         ///   If the building does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>List</c> or a <c>List</c> containing only empty <c>bool[,]</c>s
@@ -180,7 +199,9 @@ namespace RangeHighlight {
         ///   A function that evaluates whether the <c>Building</c> matches
         ///   this highlighter, and if so returns a <c>List</c> of <c>Tuple</c>s,
         ///   each containing the tint
-        ///   color, highlight shape, and x and y offset for the building "center".
+        ///   color, highlight shape, and x and y offset for the building "center"
+        ///   (e.g., as constructed by
+        ///   <c cref="BuildingHighlighterResult(Color, bool[,], int, int)">BuildingHighlighterResult</c>).
         ///   If the building does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>List</c> or a <c>List</c> containing only empty <c>bool[,]</c>s
@@ -188,8 +209,8 @@ namespace RangeHighlight {
         ///   as a match so that no other highlighters will be processed for the building.)
         /// </param>
         void AddBuildingRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey,
-                Func<CarpenterMenu.BlueprintEntry, List<Tuple<Color, bool[,], int, int>>?>? blueprintHighlighter,
-                Func<Building, List<Tuple<Color, bool[,], int, int>>?> buildingHighlighter);
+                Func<CarpenterMenu.BlueprintEntry, List<BuildingHighlighterResult>?>? blueprintHighlighter,
+                Func<Building, List<BuildingHighlighterResult>?> buildingHighlighter);
 
         /// <summary>
         ///   Remove any building range highlighters added with the given <c>uniqueId</c>
@@ -197,6 +218,12 @@ namespace RangeHighlight {
         void RemoveBuildingRangeHighlighter(string uniqueId);
 
         // ----- Item Highlighters ----
+
+        /// <summary>Construct the tuple that is the return type of the item highlighter.</summary>
+        /// <param name="tint">The color to use for this highlight</param>
+        /// <param name="shape">The shape of this highlight</param>
+        /// <returns>A tuple of the arguments</returns>
+        ItemHighlighterResult ItemHighlighterResult(Color tint, bool[,] shape);
 
         /// <summary>Add a highlighter for items.</summary>
         /// <param name="uniqueId">
@@ -218,14 +245,17 @@ namespace RangeHighlight {
         /// <param name="highlighter">
         ///   A function that evaluates whether the given item matches
         ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
-        ///   color and highlight shape.  The function parameters are the <c>Item</c>
+        ///   color and highlight shape (e.g., as constructed by
+        ///   <c cref="ItemHighlighterResult(Color, bool[,])">ItemHighlighterResult</c>).
+        ///   The function parameters are the <c>Item</c>
         ///   object, its item ID ("parent sheet index"), and the lower-cased item name.
         ///   If the item does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>bool[,]</c> will result in no highlighting, but counts
         ///   as a match so that no other highlighters will be processed for the item.)
         /// </param>
-        void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld, Func<Item, int, string, Tuple<Color, bool[,]>?> highlighter);
+        void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld,
+                Func<Item, int, string, ItemHighlighterResult?> highlighter);
 
         /// <summary>
         ///   Add a highlighter for items, with callbacks to bracket the round of range highlight calculation.
@@ -258,7 +288,9 @@ namespace RangeHighlight {
         ///   A function that evaluates whether the given item matches
         ///   this highlighter, and if so returns a <c>List</c> of <c>Tuple</c>s,
         ///   each containing the tint
-        ///   color and highlight shape.  The function parameters are the <c>Item</c>
+        ///   color and highlight shape (e.g., as constructed by
+        ///   <c cref="ItemHighlighterResult(Color, bool[,])">ItemHighlighterResult</c>).
+        ///   The function parameters are the <c>Item</c>
         ///   object, its item ID ("parent sheet index"), and the lower-cased item name.
         ///   If the item does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
@@ -271,7 +303,8 @@ namespace RangeHighlight {
         ///   range calculation.  Called if and only if the <paramref name="onRangeCalculationStart"/>
         ///   function was called.
         /// </param>
-        void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld, Action? onRangeCalculationStart, Func<Item, int, string, List<Tuple<Color, bool[,]>>?> highlighter, Action? onRangeCalculationFinish);
+        void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld,
+                Action? onRangeCalculationStart, Func<Item, int, string, List<ItemHighlighterResult>?> highlighter, Action? onRangeCalculationFinish);
 
         /// <summary>
         ///   Remove any item range highlighters added with the given <c>uniqueId</c>
@@ -279,6 +312,12 @@ namespace RangeHighlight {
         void RemoveItemRangeHighlighter(string uniqueId);
 
         // ----- Temporary Animated Sprite Highlighters ----
+
+        /// <summary>Construct the tuple that is the return type of the TemporaryAnimatedSprite highlighter.</summary>
+        /// <param name="tint">The color to use for this highlight</param>
+        /// <param name="shape">The shape of this highlight</param>
+        /// <returns>A tuple of the arguments</returns>
+        TASHighlighterResult TASHighlighterResult(Color tint, bool[,] shape);
 
         /// <summary>Add a highlighter for temporary animated sprite objects.</summary>
         /// <param name="uniqueId">
@@ -291,13 +330,15 @@ namespace RangeHighlight {
         /// <param name="highlighter">
         ///   A function that evaluates whether the given temporary animated sprite matches
         ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
-        ///   color and highlight shape.
+        ///   color and highlight shape (e.g., as constructed by
+        ///   <c cref="TASHighlighterResult(Color, bool[,])">TASHighlighterResult</c>).
         ///   If the temporary animated sprite does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>bool[,]</c> will result in no highlighting, but counts
         ///   as a match so that no other highlighters will be processed for the temporary animated sprite.)
         /// </param>
-        void AddTemporaryAnimatedSpriteHighlighter(string uniqueId, Func<bool> isEnabled, Func<TemporaryAnimatedSprite, Tuple<Color, bool[,]>?> highlighter);
+        void AddTemporaryAnimatedSpriteHighlighter(string uniqueId, Func<bool> isEnabled,
+                Func<TemporaryAnimatedSprite, TASHighlighterResult?> highlighter);
 
         /// <summary>Add a highlighter for temporary animated sprite objects.</summary>
         /// <param name="uniqueId">
@@ -309,15 +350,17 @@ namespace RangeHighlight {
         /// </param>
         /// <param name="highlighter">
         ///   A function that evaluates whether the given temporary animated sprite matches
-        ///   this highlighter, and if so returns a <c>List</c> of </c><c>Tuple</c>s, each
-        ///   containing a tint color and highlight shape.
+        ///   this highlighter, and if so returns a <c>List</c> of <c>Tuple</c>s, each
+        ///   containing a tint color and highlight shape (e.g., as constructed by
+        ///   <c cref="TASHighlighterResult(Color, bool[,])">TASHighlighterResult</c>).
         ///   If the temporary animated sprite does not match then
         ///   the function should return <c>null</c>.  (Note that returning an
         ///   empty <c>List</c>, or a <c>List</c> containing only empty <c>bool[,]</c>s
         ///   will result in no highlighting, but counts
         ///   as a match so that no other highlighters will be processed for the temporary animated sprite.)
         /// </param>
-        void AddTemporaryAnimatedSpriteHighlighter(string uniqueId, Func<bool> isEnabled, Func<TemporaryAnimatedSprite, List<Tuple<Color, bool[,]>>?> highlighter);
+        void AddTemporaryAnimatedSpriteHighlighter(string uniqueId, Func<bool> isEnabled,
+                Func<TemporaryAnimatedSprite, List<TASHighlighterResult>?> highlighter);
 
         /// <summary>
         ///   Remove any temporary animated sprite range highlighters added with the given <c>uniqueId</c>

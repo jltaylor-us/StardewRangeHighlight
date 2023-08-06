@@ -131,14 +131,14 @@ namespace RangeHighlight {
             return new(tint, shape);
         }
 
-        public void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld, Action? onRangeCalculationStart, Func<Item, int, string, List<ItemHighlighterResult>?> highlighter, Action? onRangeCalculationFinish) {
+        public void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld, Action? onRangeCalculationStart, Func<Item, List<ItemHighlighterResult>?> highlighter, Action? onRangeCalculationFinish) {
             rangeHighlighter.AddItemHighlighter(uniqueId, isEnabled, hotkey, highlightOthersWhenHeld, highlighter, onRangeCalculationStart, onRangeCalculationFinish);
         }
 
-        public void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld, Func<Item, int, string, ItemHighlighterResult?> highlighter) {
-            Func<Item, int, string, List<ItemHighlighterResult>?> wrappedHighlighter =
-                (Item i, int idx, string name) => {
-                    var orig = highlighter(i, idx, name);
+        public void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld, Func<Item, ItemHighlighterResult?> highlighter) {
+            Func<Item, List<ItemHighlighterResult>?> wrappedHighlighter =
+                (Item i) => {
+                    var orig = highlighter(i);
                     if (orig is null) return null;
                     return new List<ItemHighlighterResult>(1) { orig };
                 };

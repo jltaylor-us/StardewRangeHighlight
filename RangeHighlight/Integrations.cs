@@ -61,8 +61,8 @@ namespace RangeHighlight {
                         }
                     }
                 },
-                (item, itemID, itemName) => {
-                    if (itemName.Contains("bee house")) {
+                (item) => {
+                    if (item.Name.ToLowerInvariant().Contains("bee house")) {
                         return new List<Tuple<Color, bool[,]>>(1) { new (theMod.config.BeehouseRangeTint, beehouseShape) };
                     } else {
                         return null;
@@ -83,11 +83,11 @@ namespace RangeHighlight {
                         coverageMask[entry.Key] = PointsToMask(entry.Value);
                     }
                 },
-                (item, itemID, itemName) => {
-                    if (coverageMask.TryGetValue(itemID, out bool[,]? tiles)) {
+                (item) => {
+                    if (coverageMask.TryGetValue(item.ParentSheetIndex, out bool[,]? tiles)) {
                         return new List<Tuple<Color, bool[,]>>(1) { new (theMod.config.SprinklerRangeTint, tiles) };
                     } else if (fallbackToDefault) {
-                        var x = theMod.GetDefaultSprinklerHighlight(item, itemID, itemName);
+                        var x = theMod.GetDefaultSprinklerHighlight(item);
                         if (x is null) return null;
                         return new List<Tuple<Color, bool[,]>>(1) { x };
                     } else {

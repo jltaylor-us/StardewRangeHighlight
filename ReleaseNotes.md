@@ -11,6 +11,7 @@ Updated for Stardew Valley 1.6 and SMAPI 4.0.
 
 * Removed deprecated APIs
 * A match from one highlighter no longer stops matching on other highlighters.
+* Item highlighters no longer take arguments for item ID and name.
 
 ## Version 3.6.0
 

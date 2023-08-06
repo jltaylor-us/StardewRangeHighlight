@@ -237,13 +237,10 @@ namespace RangeHighlight {
         ///   this highlighter, and if so returns a <c>Tuple</c> containing the tint
         ///   color and highlight shape (e.g., as constructed by
         ///   <c cref="ItemHighlighterResult(Color, bool[,])">ItemHighlighterResult</c>).
-        ///   The function parameters are the <c>Item</c>
-        ///   object, its item ID ("parent sheet index"), and the lower-cased item name.
-        ///   If the item does not match then
-        ///   the function should return <c>null</c>.
+        ///   If the item does not match then the function should return <c>null</c>.
         /// </param>
         void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld,
-                Func<Item, int, string, ItemHighlighterResult?> highlighter);
+                Func<Item, ItemHighlighterResult?> highlighter);
 
         /// <summary>
         ///   Add a highlighter for items, with callbacks to bracket the round of range highlight calculation.
@@ -278,10 +275,7 @@ namespace RangeHighlight {
         ///   each containing the tint
         ///   color and highlight shape (e.g., as constructed by
         ///   <c cref="ItemHighlighterResult(Color, bool[,])">ItemHighlighterResult</c>).
-        ///   The function parameters are the <c>Item</c>
-        ///   object, its item ID ("parent sheet index"), and the lower-cased item name.
-        ///   If the item does not match then
-        ///   the function should return <c>null</c>.
+        ///   If the item does not match then the function should return <c>null</c>.
         /// </param>
         /// <param name="onRangeCalculationFinish">
         ///   Called after the last time the highlighter function is called in a "batch" of highlight
@@ -289,7 +283,7 @@ namespace RangeHighlight {
         ///   function was called.
         /// </param>
         void AddItemRangeHighlighter(string uniqueId, Func<bool> isEnabled, Func<KeybindList> hotkey, Func<bool> highlightOthersWhenHeld,
-                Action? onRangeCalculationStart, Func<Item, int, string, List<ItemHighlighterResult>?> highlighter, Action? onRangeCalculationFinish);
+                Action? onRangeCalculationStart, Func<Item, List<ItemHighlighterResult>?> highlighter, Action? onRangeCalculationFinish);
 
         /// <summary>
         ///   Remove any item range highlighters added with the given <c>uniqueId</c>

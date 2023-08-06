@@ -15,7 +15,7 @@ using StardewValley.Menus;
 namespace RangeHighlight {
     using BlueprintHighlightFunction = Func<CarpenterMenu.BlueprintEntry, List<Tuple<Color, bool[,], int, int>>?>;
     using BuildingHighlightFunction = Func<Building, List<Tuple<Color, bool[,], int, int>>?>;
-    using ItemHighlightFunction = Func<Item, int, string, List<Tuple<Color, bool[,]>>?>;
+    using ItemHighlightFunction = Func<Item, List<Tuple<Color, bool[,]>>?>;
     using TASHighlightFunction = Func<TemporaryAnimatedSprite, List<Tuple<Color, bool[,]>>?>;
 
     internal class RangeHighlighter {
@@ -228,14 +228,12 @@ namespace RangeHighlight {
 
             if (Game1.player.CurrentItem != null) {
                 Item item = Game1.player.CurrentItem;
-                string itemName = item.Name.ToLower();
-                int itemID = item.ParentSheetIndex;
                 for (int i = 0; i < itemHighlighters.Count; ++i) {
                     if (!itemHighlighterStartCalled[i]) {
                         itemHighlighters[i].onStart?.Invoke();
                         itemHighlighterStartCalled[i] = true;
                     }
-                    var ret = itemHighlighters[i].highlighter(item, itemID, itemName);
+                    var ret = itemHighlighters[i].highlighter(item);
                     if (ret != null) {
                         if (itemHighlighters[i].HighlightOthersWhenHeld) {
                             runItemHighlighter[i] = true;
@@ -314,15 +312,13 @@ namespace RangeHighlight {
 
             if (iterateItems) {
                 foreach (var item in Game1.currentLocation.Objects.Values) {
-                    string itemName = item.Name.ToLower();
-                    int itemID = item.ParentSheetIndex;
                     for (int i = 0; i < itemHighlighters.Count; ++i) {
                         if (runItemHighlighter[i]) {
                             if (!itemHighlighterStartCalled[i]) {
                                 itemHighlighters[i].onStart?.Invoke();
                                 itemHighlighterStartCalled[i] = true;
                             }
-                            var ret = itemHighlighters[i].highlighter(item, itemID, itemName);
+                            var ret = itemHighlighters[i].highlighter(item);
                             if (ret != null) {
                                 AddHighlightTiles(ret, (int)item.TileLocation.X, (int)item.TileLocation.Y);
                                 //break;

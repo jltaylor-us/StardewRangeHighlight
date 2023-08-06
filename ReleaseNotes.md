@@ -9,6 +9,8 @@ Updated for Stardew Valley 1.6 and SMAPI 4.0.
 
 * Lots of internal stuff was updated for SDV 1.6, so integrations with other
   mods may be broken.
+* Added configuration option to hide held bomb ranges when there is a currently
+  "ticking" already-placed bomb.
 
 ### API Changes
 

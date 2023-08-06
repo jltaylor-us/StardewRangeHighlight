@@ -293,12 +293,14 @@ namespace RangeHighlight {
                     //}
                     return null;
                 });
+            bool bombsShownThisFrame = false;
             api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/bomb",
                 () => config.ShowBombRange && config.showHeldBombRange,
                 () => new KeybindList(),
                 () => true,
-                null,
+                () => { bombsShownThisFrame = false; },
                 (item) => {
+                    if (config.hideHeldBombWhenPlacedAreTicking && bombsShownThisFrame) return null;
                     if (!Utility.IsNormalObjectAtParentSheetIndex(item, item.ItemId)) return null;
                     return bombHelper(item.ParentSheetIndex, 0);
                 },
@@ -306,7 +308,11 @@ namespace RangeHighlight {
             api.AddTemporaryAnimatedSpriteHighlighter("jltaylor-us.RangeHighlight/bomb",
                 () => config.ShowBombRange && config.showPlacedBombRange,
                 sprite => {
-                    return bombHelper(sprite.initialParentTileIndex, sprite.bombRadius);
+                    var result = bombHelper(sprite.initialParentTileIndex, sprite.bombRadius);
+                    if (result is not null) {
+                        bombsShownThisFrame = true;
+                    }
+                    return result;
                 });
         }
 

@@ -28,6 +28,7 @@ namespace RangeHighlight {
 
         public bool showHeldBombRange { get; set; } = true;
         public bool showPlacedBombRange { get; set; } = true;
+        public bool hideHeldBombWhenPlacedAreTicking { get; set; } = true;
         public bool showBombInnerRange { get; set; } = false;
         public bool showBombOuterRange { get; set; } = true;
         public KeybindList ShowAllRangesKey { get; set; } = KeybindList.ForSingle(SButton.LeftShift);
@@ -226,6 +227,12 @@ namespace RangeHighlight {
                 tooltip: I18n.Config_Bomb_Placed_Tooltip,
                 getValue: () => theMod.config.showPlacedBombRange,
                 setValue: (v) => theMod.config.showPlacedBombRange = v);
+            gmcm.AddBoolOption(
+                mod: mod,
+                name: I18n.Config_Bomb_HideHeldWhenTicking,
+                tooltip: I18n.Config_Bomb_HideHeldWhenTicking_Tooltip,
+                getValue: () => theMod.config.hideHeldBombWhenPlacedAreTicking,
+                setValue: (v) => theMod.config.hideHeldBombWhenPlacedAreTicking = v);
             gmcmOpt?.AddColorOption(
                 mod: mod,
                 name: I18n.Config_Tint,

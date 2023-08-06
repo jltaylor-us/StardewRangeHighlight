@@ -247,12 +247,28 @@ namespace RangeHighlight {
                 () => config.ShowBeehouseRangeKey,
                 () => config.ShowOtherBeehousesWhenHoldingBeehouse,
                 (item) => {
-                    // TODO: is there a better way to do this?
-                    if (item.Name.ToLowerInvariant().Contains("bee house")) {
-                        return new Tuple<Color, bool[,]>(config.BeehouseRangeTint, defaultShapes.beehouse);
-                    } else {
-                        return null;
+                    // This big mess finds machines that might use a nearby flower as input.
+                    // Let's assume that they are beehouses, or at least something that the
+                    // user probably wants to have highlighted like a beehouse.
+                    if (item is StardewValley.Object obj) {
+                        var machineData = obj.GetMachineData();
+                        if (machineData is not null && machineData.OutputRules is not null) {
+                            foreach(var rule in machineData.OutputRules) {
+                                foreach(var outputItem in rule.OutputItem) {
+                                    foreach(string s in ArgUtility.SplitBySpace(outputItem.ItemId)) {
+                                        if (s == "NEARBY_FLOWER_ID") {
+                                            return new Tuple<Color, bool[,]>(config.BeehouseRangeTint, defaultShapes.beehouse);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
+                    // Previously we just matched on the name, which is a whole lot simpler.
+                    //if (item.Name.ToLowerInvariant().Contains("bee house")) {
+                    //    return new Tuple<Color, bool[,]>(config.BeehouseRangeTint, defaultShapes.beehouse);
+                    //}
+                    return null;
                 });
             api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/bomb",
                 () => config.ShowBombRange && config.showHeldBombRange,

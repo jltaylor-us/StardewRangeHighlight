@@ -7,6 +7,9 @@ Updated for Stardew Valley 1.6 and SMAPI 4.0.
 
 ### User-visible Changes
 
+* Lots of internal stuff was updated for SDV 1.6, so integrations with other
+  mods may be broken.
+
 ### API Changes
 
 * Removed deprecated APIs

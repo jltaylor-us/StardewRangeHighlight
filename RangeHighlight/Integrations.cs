@@ -48,7 +48,7 @@ namespace RangeHighlight {
                 () => theMod.config.ShowJunimoRange,
                 () => theMod.config.ShowJunimoRangeKey,
                 blueprint => {
-                    if (blueprint.name == "Junimo Hut") {
+                    if (blueprint.Id == "Junimo Hut") {
                         setRange();
                         return new Tuple<Color, bool[,], int, int>(theMod.config.JunimoRangeTint, theMod.defaultShapes.junimoHut, 1, 1);
                     } else {
@@ -58,6 +58,7 @@ namespace RangeHighlight {
                 building => {
                     setRange();
                     if (building is JunimoHut) {
+                        // junimoHut.cropHarvestRadius can be set per-building in SDV 1.6, but who knows what Better Junimos is doing with that
                         setRange();
                         return new Tuple<Color, bool[,], int, int>(theMod.config.JunimoRangeTint, theMod.defaultShapes.junimoHut, 1, 1);
                     } else {
@@ -127,19 +128,16 @@ namespace RangeHighlight {
         private void IntegrateBetterSprinklers() {
             IBetterSprinklersApi? api = theMod.helper.ModRegistry.GetApi<IBetterSprinklersApi>("Speeder.BetterSprinklers");
             if (api == null) return;
-            theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler");
             IntegrateSprinklerCommon("jltaylor-us.RangeHighlight/better-sprinkler", api.GetSprinklerCoverage, false);
         }
         private void IntegrateSimpleSprinklers() {
             ISimplerSprinklerApi? api = theMod.helper.ModRegistry.GetApi<ISimplerSprinklerApi>("tZed.SimpleSprinkler");
             if (api == null) return;
-            theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler");
             IntegrateSprinklerCommon("jltaylor-us.RangeHighlight/simple-sprinkler", api.GetNewSprinklerCoverage, false);
         }
         private void IntegrateLineSprinklers() {
             ILineSprinklersApi? api = theMod.helper.ModRegistry.GetApi<ILineSprinklersApi>("hootless.LineSprinklers");
             if (api == null) return;
-            theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/sprinkler");
             IntegrateSprinklerCommon("jltaylor-us.RangeHighlight/line-sprinkler", api.GetSprinklerCoverage, true);
         }
         private bool[,] PointsToMask(Vector2[] points) {

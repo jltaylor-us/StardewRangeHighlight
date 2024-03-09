@@ -18,6 +18,16 @@ Updated for Stardew Valley 1.6 and SMAPI 4.0.
 * A match from one highlighter no longer stops matching on other highlighters.
 * Item highlighters no longer take arguments for item ID and name.
 
+
+## Version 3.6.1
+
+### User-visible changes
+
+* Fix integration with Better Junimos when using its "Junimos work for wages"
+  option.  (This also makes in-game changes to its configuration for junimo
+  range reflected immediately instead of requiring a return to the title screen.)
+
+
 ## Version 3.6.0
 
 ### User-visible Changes

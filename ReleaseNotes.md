@@ -3,6 +3,12 @@
 
 ## Version 4.0.0
 
+### User-visible Changes
+
+Fixed crash with Better Beehouses.
+
+## Version 4.0.0
+
 Updated for Stardew Valley 1.6 and SMAPI 4.0.
 
 ### User-visible Changes

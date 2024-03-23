@@ -180,7 +180,8 @@ namespace RangeHighlight {
         int SprinklerIndex { get; }
     }
     public interface IBetterBeehousesAPI {
-        public bool GetEnabledHere(GameLocation location, bool isWinter);
+        // removed in 2.0.0
+        // public bool GetEnabledHere(GameLocation location, bool isWinter);
         public int GetSearchRadius();
     }
 }

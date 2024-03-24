@@ -1,7 +1,13 @@
 
 # Release Notes
 
-## Version 4.0.0
+## Version 4.0.2
+
+### User-visible Changes
+
+Fixed log error spam for items with a null Name when using Better Beehouses.
+
+## Version 4.0.1
 
 ### User-visible Changes
 

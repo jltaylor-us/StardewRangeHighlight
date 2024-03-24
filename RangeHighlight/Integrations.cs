@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Buildings;
+using static RangeHighlight.TheMod;
 
 namespace RangeHighlight {
     internal class Integrations {
@@ -72,6 +73,8 @@ namespace RangeHighlight {
             theMod.api.RemoveItemRangeHighlighter("jltaylor-us.RangeHighlight/beehouse");
             bool[,] beehouseShape = { };
             int lastVal = 0;
+            // lots of dupilicated code with the default highlighter...
+            // probably could simplify this a lot by changing defaultShapes.beehouse instead
             theMod.api.AddItemRangeHighlighter("jltaylor-us.RangeHighlight/better-beehouses",
                 () => theMod.config.ShowBeehouseRange,
                 () => theMod.config.ShowBeehouseRangeKey,
@@ -89,11 +92,28 @@ namespace RangeHighlight {
                     }
                 },
                 (item) => {
-                    if (item.Name.ToLowerInvariant().Contains("bee house")) {
-                        return new List<Tuple<Color, bool[,]>>(1) { new (theMod.config.BeehouseRangeTint, beehouseShape) };
-                    } else {
-                        return null;
+                    // This big mess finds machines that might use a nearby flower as input.
+                    // Let's assume that they are beehouses, or at least something that the
+                    // user probably wants to have highlighted like a beehouse.
+                    if (item is StardewValley.Object obj) {
+                        var machineData = obj.GetMachineData();
+                        if (machineData is not null && machineData.OutputRules is not null) {
+                            foreach (var rule in machineData.OutputRules) {
+                                foreach (var outputItem in rule.OutputItem) {
+                                    foreach (string s in ArgUtility.SplitBySpace(outputItem.ItemId)) {
+                                        if (s == "NEARBY_FLOWER_ID") {
+                                            return new List<Tuple<Color, bool[,]>>(1) { new(theMod.config.BeehouseRangeTint, beehouseShape) };
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
+                    // Previously we just matched on the name, which is a whole lot simpler.
+                    //if (item.Name.ToLowerInvariant().Contains("bee house")) {
+                    //    return new Tuple<Color, bool[,]>(config.BeehouseRangeTint, defaultShapes.beehouse);
+                    //}
+                    return null;
                 },
                 () => { });
 
